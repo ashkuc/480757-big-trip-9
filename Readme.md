@@ -1,7 +1,7 @@
 # Личный проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
 * Студент: [Олег Новицкий](https://up.htmlacademy.ru/ecmascript/9/user/480757).
-* Наставник: `Неизвестно`.
+* Наставник: [Арсений Медоев](https://htmlacademy.ru/profile/id87533).
 
 ---
 
