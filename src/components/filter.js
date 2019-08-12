@@ -7,7 +7,7 @@ const getFilterMarkup = (checkedFilterName) => {
     if (filterHeading.toLowerCase() === checkedFilterName.toLowerCase()) {
       filterStatus = `checked`;
     }
-  
+
     return `
       <div class="trip-filters__filter">
         <input id="filter-${filterHeading}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filterHeading}" ${filterStatus}>

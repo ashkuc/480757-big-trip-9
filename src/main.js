@@ -4,7 +4,7 @@ import {getFilterMarkup} from './components/filter.js';
 import {getSortMarkup} from './components/sort.js';
 import {getTripContentMarkup} from './components/trip-content.js';
 
-const FILTER_ITEM_CHECKED = `everything`
+const FILTER_ITEM_CHECKED = `everything`;
 const SortItemsOptions = {
   CHECKED_ITEM: `event`,
   ITEMS_WITH_ICON: [`time`, `Price`]
