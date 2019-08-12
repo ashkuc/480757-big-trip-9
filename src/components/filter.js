@@ -2,19 +2,19 @@ const FILTERS_HEADINGS = [`Everything`, `Future`, `Past`];
 
 const getFilterMarkup = (checkedFilterName) => {
   const renderFilterItem = (filterHeading) => {
-  let filterStatus = ``;
+    let filterStatus = ``;
 
-  if (filterHeading.toLowerCase() === checkedFilterName.toLowerCase()) {
-    filterStatus = `checked`;
-  }
-
-  return `
-    <div class="trip-filters__filter">
-      <input id="filter-${filterHeading}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filterHeading}" ${filterStatus}>
-      <label class="trip-filters__filter-label" for="filter-${filterHeading}">${filterHeading}</label>
-    </div>
-  `;
-};
+    if (filterHeading.toLowerCase() === checkedFilterName.toLowerCase()) {
+      filterStatus = `checked`;
+    }
+  
+    return `
+      <div class="trip-filters__filter">
+        <input id="filter-${filterHeading}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filterHeading}" ${filterStatus}>
+        <label class="trip-filters__filter-label" for="filter-${filterHeading}">${filterHeading}</label>
+      </div>
+    `;
+  };
 
   return `
     <form class="trip-filters" action="#" method="get">

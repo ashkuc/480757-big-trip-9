@@ -4,11 +4,11 @@ const getSortMarkup = (itemsOptions) => {
   const renderSotrItem = (sortItemTitle) => {
     let sortItemStatus = ``;
     let sortItemIcon = ``;
-  
+
     if (sortItemTitle.toLowerCase() === itemsOptions.CHECKED_ITEM.toLowerCase()) {
       sortItemStatus = `checked`;
     }
-  
+
     if (itemsOptions.ITEMS_WITH_ICON.map((item) => item.toLowerCase()).includes(sortItemTitle.toLowerCase())) {
       sortItemIcon = `
         <svg class="trip-sort__direction-icon" width="8" height="10" viewBox="0 0 8 10">
@@ -16,7 +16,7 @@ const getSortMarkup = (itemsOptions) => {
         </svg>
       `;
     }
-  
+
     return `
       <div class="trip-sort__item  trip-sort__item--${sortItemTitle.toLowerCase()}">
         <input id="sort-${sortItemTitle}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${sortItemTitle}" ${sortItemStatus}>
