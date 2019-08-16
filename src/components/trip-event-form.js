@@ -1,4 +1,4 @@
-const getTripEventFormMarkup = () => {
+const getEventFormMarkup = () => {
   return `
     <li class="trip-events__item">
       <form class="event  event--edit" action="#" method="post">
@@ -192,4 +192,4 @@ const getTripEventFormMarkup = () => {
   `;
 };
 
-export {getTripEventFormMarkup};
+export {getEventFormMarkup};

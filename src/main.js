@@ -2,7 +2,9 @@ import {getRouteMarkup} from './components/route.js';
 import {getMenuMarkup} from './components/menu.js';
 import {getFilterMarkup} from './components/filter.js';
 import {getSortMarkup} from './components/sort.js';
-import {getTripContentMarkup} from './components/trip-content.js';
+import {getTripContentMarkup} from './components/content.js';
+import {getEvent} from './components/data.js';
+console.log(getEvent().type);
 
 const FILTER_ITEM_CHECKED = `everything`;
 const SortItemsOptions = {

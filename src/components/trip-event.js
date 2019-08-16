@@ -1,4 +1,4 @@
-const getTripEventCardMarkup = () => {
+const getEventMarkup = () => {
   return `
     <li class="trip-events__item">
       <div class="event">
@@ -37,4 +37,4 @@ const getTripEventCardMarkup = () => {
   `;
 };
 
-export {getTripEventCardMarkup};
+export {getEventMarkup};
