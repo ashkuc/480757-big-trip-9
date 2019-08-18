@@ -13,7 +13,7 @@ const shuffleArray = (array) => {
 };
 
 const getRandomBoolean = () => Boolean(Math.round(Math.random()));
-
 const getMinMax = (min, max) => Math.floor(min + Math.random() * (max + 1 - min));
+const toCapitalize = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
-export {shuffleArray, getRandomBoolean, getMinMax};
+export {shuffleArray, getRandomBoolean, getMinMax, toCapitalize};
