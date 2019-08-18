@@ -4,7 +4,7 @@ import {getFilterMarkup} from './components/filter.js';
 import {getSortMarkup} from './components/sort.js';
 import {getTripContentMarkup} from './components/content.js';
 import {getEvent} from './components/data.js';
-console.log(getEvent().type);
+console.log(getEvent().price);
 
 const FILTER_ITEM_CHECKED = `everything`;
 const SortItemsOptions = {
