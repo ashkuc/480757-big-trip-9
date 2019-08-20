@@ -4,14 +4,13 @@ import {getFilterMarkup} from './components/filter.js';
 import {getSortMarkup} from './components/sort.js';
 import {getContentMarkup} from './components/content.js';
 import {getEvent, getMenu, getFilter, getSort} from './components/data.js';
-import {toCapitalize} from './components/utils.js';
 
 const EVENTS_NUMBER = 4;
 const tripInfoContainer = document.querySelector(`.trip-info`);
 const tripControlsHeadings = document.querySelectorAll(`.trip-controls h2`);
 const tripEventsContainer = document.querySelector(`.trip-events`);
 const tripTotalCost = document.querySelector(`.trip-info__cost-value`);
-const events = new Array(EVENTS_NUMBER).fill('').map(getEvent);
+const events = new Array(EVENTS_NUMBER).fill(``).map(getEvent);
 const menu = getMenu();
 const filter = getFilter();
 const sort = getSort();

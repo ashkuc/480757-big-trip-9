@@ -116,7 +116,7 @@ const getEvent = () => {
         isChecked: getRandomBoolean(),
       },
     ],
-  }
+  };
 };
 
 const getMenu = () => {
@@ -129,7 +129,7 @@ const getMenu = () => {
       name: `stats`,
       isActive: false,
     },
-  ]
+  ];
 };
 
 const getFilter = () => {
@@ -146,7 +146,7 @@ const getFilter = () => {
       name: `past`,
       isChecked: false,
     },
-  ]
+  ];
 };
 
 const getSort = () => {
@@ -166,7 +166,7 @@ const getSort = () => {
       isChecked: false,
       hasIcon: true,
     },
-  ]
+  ];
 };
 
 export {getEvent, getMenu, getFilter, getSort};
