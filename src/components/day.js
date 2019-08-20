@@ -1,5 +1,10 @@
-import {getEventFormMarkup} from './trip-event-form.js';
+import {getEventFormMarkup} from './event-form.js';
 import {getEventMarkup} from './event.js';
+
+const renderElements = ([firstElement, ...otherElements]) => `
+  ${getEventFormMarkup(firstElement)}
+  ${otherElements.map((event) => getEventMarkup(event)).join(``)}
+`;
 
 const getDayMarkup = (events) => `<li class="trip-days__item  day">
   <div class="day__info">
@@ -8,7 +13,7 @@ const getDayMarkup = (events) => `<li class="trip-days__item  day">
   </div>
 
   <ul class="trip-events__list">
-    ${events.map((event) => getEventMarkup(event)).join(``)}
+    ${renderElements(events)}
   </ul>
 </li>`.trim();
 
