@@ -1,4 +1,4 @@
-import {toCapitalize, getMinMax, toTimeForEdit} from './utils.js';
+import {toCapitalize, toTimeForEdit, getRandomFromArray} from './utils.js';
 
 const getEventFormMarkup = ({types, places, time, price, additionalOptions, description, photos}) => {
   return `
@@ -37,7 +37,7 @@ const getEventFormMarkup = ({types, places, time, price, additionalOptions, desc
 
           <div class="event__field-group  event__field-group--destination">
             <label class="event__label  event__type-output" for="event-destination-1">
-              ${toCapitalize(types[getMinMax(0, 9)].name)} ${types[getMinMax(0, 9)].pretext}
+              ${toCapitalize(getRandomFromArray(types).name)} ${getRandomFromArray(types).pretext}
             </label>
             <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${places[Math.floor(Math.random() * 8)].split(` `).map((word) => toCapitalize(word)).join(` `)}" list="destination-list-1">
             <datalist id="destination-list-1">

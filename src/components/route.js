@@ -1,8 +1,8 @@
-import {getMinMax, toCapitalize} from './utils.js';
+import {toCapitalize, getRandomFromArray} from './utils.js';
 
 const getRouteMarkup = (events) => {
   const route = () => {
-    let places = new Set(events.map((event) => event.places[getMinMax(0, 7)]));
+    let places = new Set(events.map((event) => getRandomFromArray(event.places)));
     places = Array.from(places);
     if (places.length > 3) {
       return `${toCapitalize(places[0])} &mdash; ... &mdash; ${toCapitalize(places[places.length - 1])}`;
