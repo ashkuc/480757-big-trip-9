@@ -9,6 +9,8 @@ export class MenuContainer {
     if (!this._element) {
       this._element = createElement(this.getTemplate());
     }
+
+    return this._element;
   }
 
   getTemplate() {
@@ -16,7 +18,3 @@ export class MenuContainer {
     </nav>`.trim();
   }
 }
-
-// export const getMenu = (menu) => `<nav class="trip-controls__trip-tabs  trip-tabs">
-//   ${menu.map((element) => `<a class="trip-tabs__btn${element.isActive ? ` trip-tabs__btn--active` : ``}" href="#">${toCapitalize(element.name)}</a>`.trim()).join(``)}
-// </nav>`;

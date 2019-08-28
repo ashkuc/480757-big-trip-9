@@ -21,7 +21,9 @@ export const toCapitalize = (string) => string.charAt(0).toUpperCase() + string.
 
 export const Position = {
   AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`
+  BEFOREEND: `beforeend`,
+  AFTER: `after`,
+  BEFORE: `before`,
 };
 
 export const createElement = (template) => {
@@ -37,6 +39,12 @@ export const render = (container, element, position) => {
       break;
     case Position.BEFOREEND:
       container.append(element);
+      break;
+    case Position.AFTER:
+      container.after(element);
+      break;
+    case Position.BEFORE:
+      container.before(element);
       break;
   }
 };
