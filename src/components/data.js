@@ -149,7 +149,7 @@ export const getFilterItems = () => {
   ];
 };
 
-export const getSort = () => {
+export const getSortItems = () => {
   return [
     {
       name: `event`,
