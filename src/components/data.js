@@ -2,7 +2,7 @@ import {shuffleArray, getRandomBetween, getRandomBoolean} from './utils.js';
 
 const getRandomLink = () => `http://picsum.photos/300/150?r=${Math.random()}`;
 
-const getEvent = () => {
+export const getEvent = () => {
   return {
     types: [
       {
@@ -119,7 +119,7 @@ const getEvent = () => {
   };
 };
 
-const getMenu = () => {
+export const getMenuItems = () => {
   return [
     {
       name: `table`,
@@ -132,7 +132,7 @@ const getMenu = () => {
   ];
 };
 
-const getFilter = () => {
+export const getFilter = () => {
   return [
     {
       name: `everything`,
@@ -149,7 +149,7 @@ const getFilter = () => {
   ];
 };
 
-const getSort = () => {
+export const getSort = () => {
   return [
     {
       name: `event`,
@@ -168,5 +168,3 @@ const getSort = () => {
     },
   ];
 };
-
-export {getEvent, getMenu, getFilter, getSort};
