@@ -3,7 +3,7 @@ import {getMenuMarkup} from './components/menu.js';
 import {getFilterMarkup} from './components/filter.js';
 import {getSortMarkup} from './components/sort.js';
 import {getContentMarkup} from './components/content.js';
-import {getEvent, getMenuItems, getFilter, getSort} from './components/data.js';
+import {getEvent, getMenuItems, getFilterItems, getSort} from './components/data.js';
 
 const EVENTS_NUMBER = 4;
 const tripInfoContainer = document.querySelector(`.trip-info`);
@@ -12,7 +12,7 @@ const tripEventsContainer = document.querySelector(`.trip-events`);
 const tripTotalCost = document.querySelector(`.trip-info__cost-value`);
 const events = new Array(EVENTS_NUMBER).fill(``).map(getEvent);
 const menuItems = getMenuItems();
-const filter = getFilter();
+const filterItems = getFilterItems();
 const sort = getSort();
 const totalSum = events.map((event) => event.price).reduce((a, b) => a + b);
 

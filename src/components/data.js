@@ -132,7 +132,7 @@ export const getMenuItems = () => {
   ];
 };
 
-export const getFilter = () => {
+export const getFilterItems = () => {
   return [
     {
       name: `everything`,

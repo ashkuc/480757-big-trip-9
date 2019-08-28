@@ -44,6 +44,6 @@ export class Route {
       <h1 class="trip-info__title">${this.getRoute()}</h1>
 
       <p class="trip-info__dates">${this.getPeriod()}</p>
-    </div>`;
+    </div>`.trim();
   }
 }

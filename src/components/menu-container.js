@@ -13,7 +13,7 @@ export class MenuContainer {
 
   getTemplate() {
     return `<nav class="trip-controls__trip-tabs trip-tabs">
-    </nav>`;
+    </nav>`.trim();
   }
 }
 
