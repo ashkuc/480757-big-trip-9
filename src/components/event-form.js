@@ -9,7 +9,7 @@ export class EventForm {
     this._additionalOptions = additionalOptions;
     this._description = description;
     this._photos = photos;
-    this._element - null;
+    this._element = null;
   }
 
   getElement() {

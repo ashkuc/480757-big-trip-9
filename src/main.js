@@ -1,5 +1,6 @@
 import {getEvent, getMenuItems, getFilterItems, getSortItems} from './components/data.js';
-import {Position, render, unrender} from './components/utils.js';import {Route} from './components/route.js';
+import {Position, render} from './components/utils.js';
+import {Route} from './components/route.js';
 import {MenuContainer} from './components/menu-container.js';
 import {MenuItem} from './components/menu-item.js';
 import {FilterContainer} from './components/filter-container.js';
@@ -77,20 +78,20 @@ const renderEvent = (eventInfo) => {
     evt.preventDefault();
     if (evt.key === `Escape` || evt.key === `Esc`) {
       eventsList.getElement().replaceChild(event.getElement(), eventForm.getElement());
-      document.removeEventListener('keydown', onEscKeyDown);
+      document.removeEventListener(`keydown`, onEscKeyDown);
     }
   };
 
   event.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, (evt) => {
     evt.preventDefault();
     eventsList.getElement().replaceChild(eventForm.getElement(), event.getElement());
-    document.addEventListener('keydown', onEscKeyDown);
+    document.addEventListener(`keydown`, onEscKeyDown);
   });
 
   eventForm.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, (evt) => {
     evt.preventDefault();
     eventsList.getElement().replaceChild(event.getElement(), eventForm.getElement());
-    document.removeEventListener('keydown', onEscKeyDown);
+    document.removeEventListener(`keydown`, onEscKeyDown);
   });
 
   eventForm.getElement().querySelectorAll(`input[type="text"]`).forEach((input) => {
@@ -107,7 +108,7 @@ const renderEvent = (eventInfo) => {
 
   eventForm.getElement().querySelector(`form`).addEventListener(`submit`, () => {
     eventsList.getElement().replaceChild(event.getElement(), eventForm.getElement());
-    document.removeEventListener('keydown', onEscKeyDown);
+    document.removeEventListener(`keydown`, onEscKeyDown);
   });
 
   render(eventsList.getElement(), event.getElement(), Position.BEFOREEND);
