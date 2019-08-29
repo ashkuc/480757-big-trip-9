@@ -1,4 +1,4 @@
-import {shuffleArray, getRandomBetween, getRandomBoolean} from './utils.js';
+import {shuffleArray, getRandomBetween, getRandomBoolean} from './components/utils.js';
 
 const getRandomLink = () => `http://picsum.photos/300/150?r=${Math.random()}`;
 
