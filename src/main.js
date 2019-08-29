@@ -75,7 +75,6 @@ const renderEvent = (eventInfo) => {
   const eventForm = new EventForm(eventInfo);
 
   const onEscKeyDown = (evt) => {
-    evt.preventDefault();
     if (evt.key === `Escape` || evt.key === `Esc`) {
       eventsList.getElement().replaceChild(event.getElement(), eventForm.getElement());
       document.removeEventListener(`keydown`, onEscKeyDown);

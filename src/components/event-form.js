@@ -1,12 +1,14 @@
-import {toCapitalize, toTimeForEdit, getRandomFromArray, createElement} from './utils.js';
+import {toCapitalize, toTimeForEdit, createElement} from './utils.js';
+import {EventTypes} from '../event-types.js';
+import {EventOptions} from '../event-options.js';
 
 export class EventForm {
-  constructor({types, places, time, price, additionalOptions, description, photos}) {
-    this._types = types;
+  constructor({type, places, time, price, options, description, photos}) {
+    this._type = type;
     this._places = places;
     this._time = time;
     this._price = price;
-    this._additionalOptions = additionalOptions;
+    this._options = options;
     this._description = description;
     this._photos = photos;
     this._element = null;
@@ -27,7 +29,7 @@ export class EventForm {
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-1">
               <span class="visually-hidden">Choose event type</span>
-              <img class="event__type-icon" width="17" height="17" src="img/icons/flight.png" alt="Event type icon">
+              <img class="event__type-icon" width="17" height="17" src="img/icons/${EventTypes.find((item) => item.NAME === this._type).ICON}" alt="Event type icon">
             </label>
             <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -35,9 +37,9 @@ export class EventForm {
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Transfer</legend>
 
-                ${this._types.map((type) => type.isMovement ? `<div class="event__type-item">
-                  <input id="event-type-${type.name}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.name}">
-                  <label class="event__type-label  event__type-label--${type.name}" for="event-type-${type.name}-1">${toCapitalize(type.name)}</label>
+                ${EventTypes.map((type) => type.IS_MOVEMENT ? `<div class="event__type-item">
+                  <input id="event-type-${type.NAME}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.NAME}"${type.NAME === this._type ? ` checked` : ``}>
+                  <label class="event__type-label  event__type-label--${type.NAME}" for="event-type-${type.NAME}-1">${toCapitalize(type.NAME)}</label>
                 </div>`.trim() : ``).join(``)}
 
               </fieldset>
@@ -45,9 +47,9 @@ export class EventForm {
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Activity</legend>
 
-                ${this._types.map((type) => !type.isMovement ? `<div class="event__type-item">
-                  <input id="event-type-${type.name}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.name}">
-                  <label class="event__type-label  event__type-label--${type.name}" for="event-type-${type.name}-1">${toCapitalize(type.name)}</label>
+                ${EventTypes.map((type) => !type.IS_MOVEMENT ? `<div class="event__type-item">
+                  <input id="event-type-${type.NAME}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.NAME}"${type.NAME === this._type ? ` checked` : ``}>
+                  <label class="event__type-label  event__type-label--${type.NAME}" for="event-type-${type.NAME}-1">${toCapitalize(type.NAME)}</label>
                 </div>`.trim() : ``).join(``)}
 
               </fieldset>
@@ -56,7 +58,7 @@ export class EventForm {
 
           <div class="event__field-group  event__field-group--destination">
             <label class="event__label  event__type-output" for="event-destination-1">
-              ${toCapitalize(getRandomFromArray(this._types).name)} ${getRandomFromArray(this._types).pretext}
+              ${toCapitalize(this._type)} ${EventTypes.find((item) => item.NAME === this._type).PRETEXT}
             </label>
             <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${this._places[Math.floor(Math.random() * 8)].split(` `).map((word) => toCapitalize(word)).join(` `)}" list="destination-list-1">
             <datalist id="destination-list-1">
@@ -107,12 +109,12 @@ export class EventForm {
 
             <div class="event__available-offers">
 
-              ${this._additionalOptions.map((option) => `<div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-${option.name.split(/ /).slice(-1)}-1" type="checkbox" name="event-offer-${option.name.split(/ /).slice(-1)}" ${option.isChecked ? `checked` : ``}>
-                <label class="event__offer-label" for="event-offer-${option.name.split(/ /).slice(-1)}-1">
-                  <span class="event__offer-title">${toCapitalize(option.name)}</span>
+              ${Array.from(EventOptions).map((option) => `<div class="event__offer-selector">
+                <input class="event__offer-checkbox  visually-hidden" id="event-offer-${option[0].split(/ /).slice(-1)}-1" type="checkbox" name="event-offer-${option[0].split(/ /).slice(-1)}" ${this._options.includes(option[0]) ? `checked` : ``}>
+                <label class="event__offer-label" for="event-offer-${option[0].split(/ /).slice(-1)}-1">
+                  <span class="event__offer-title">${toCapitalize(option[0])}</span>
                   &plus;
-                  &euro;&nbsp;<span class="event__offer-price">${option.cost}</span>
+                  &euro;&nbsp;<span class="event__offer-price">${option[1]}</span>
                 </label>
               </div>`.trim()).join(``)}
             </div>

@@ -1,81 +1,21 @@
-import {shuffleArray, getRandomBetween, getRandomBoolean} from './components/utils.js';
+import {shuffleArray, getRandomBetween, getRandomFromArray} from './components/utils.js';
 
 const getRandomLink = () => `http://picsum.photos/300/150?r=${Math.random()}`;
 
 export const getEvent = () => {
   return {
-    types: [
-      {
-        name: `taxi`,
-        pretext: `to`,
-        icon: `taxi.png`,
-        isChecked: false,
-        isMovement: true,
-      },
-      {
-        name: `bus`,
-        pretext: `to`,
-        icon: `bus.png`,
-        isChecked: false,
-        isMovement: true,
-      },
-      {
-        name: `train`,
-        pretext: `to`,
-        icon: `train.png`,
-        isChecked: false,
-        isMovement: true,
-      },
-      {
-        name: `ship`,
-        pretext: `to`,
-        icon: `ship.png`,
-        isChecked: false,
-        isMovement: true,
-      },
-      {
-        name: `transport`,
-        pretext: `to`,
-        icon: `transport.png`,
-        isChecked: false,
-        isMovement: true,
-      },
-      {
-        name: `drive`,
-        pretext: `to`,
-        icon: `drive.png`,
-        isChecked: false,
-        isMovement: true,
-      },
-      {
-        name: `flight`,
-        pretext: `to`,
-        icon: `flight.png`,
-        isChecked: true,
-        isMovement: true,
-      },
-      {
-        name: `check-in`,
-        pretext: ``,
-        icon: `check-in.png`,
-        isChecked: false,
-        isMovement: false,
-      },
-      {
-        name: `sightseeing`,
-        pretext: `at`,
-        icon: `sightseeing.png`,
-        isChecked: false,
-        isMovement: false,
-      },
-      {
-        name: `restaurant`,
-        pretext: `in`,
-        icon: `restaurant.png`,
-        isChecked: false,
-        isMovement: false,
-      },
-    ],
+    type: getRandomFromArray([
+      `taxi`,
+      `bus`,
+      `train`,
+      `ship`,
+      `transport`,
+      `drive`,
+      `flight`,
+      `check-in`,
+      `sightseeing`,
+      `restaurant`,
+    ]),
     places: [
       `norwegian fjords`,
       `paris`,
@@ -94,28 +34,12 @@ export const getEvent = () => {
       end: Date.now() + getRandomBetween(5, 10) * 24 * 60 * 60 * 1000 + getRandomBetween(0, 180) * 60 * 1000,
     },
     price: getRandomBetween(2, 20) * 10,
-    additionalOptions: [
-      {
-        name: `add luggage`,
-        cost: `10`,
-        isChecked: getRandomBoolean(),
-      },
-      {
-        name: `switch to comfort`,
-        cost: `150`,
-        isChecked: getRandomBoolean(),
-      },
-      {
-        name: `add meal`,
-        cost: `2`,
-        isChecked: getRandomBoolean(),
-      },
-      {
-        name: `choose seats`,
-        cost: `9`,
-        isChecked: getRandomBoolean(),
-      },
-    ],
+    options: shuffleArray([
+      `add luggage`,
+      `switch to comfort`,
+      `add meal`,
+      `choose seats`,
+    ]).slice(0, getRandomBetween(0, 4)),
   };
 };
 

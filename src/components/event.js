@@ -1,12 +1,14 @@
-import {toCapitalize, getRandomBetween, shuffleArray, getRandomFromArray, createElement} from './utils.js';
+import {toCapitalize, getRandomBetween, createElement} from './utils.js';
+import {EventTypes} from '../event-types.js';
+import {EventOptions} from '../event-options.js';
 
 export class Event {
-  constructor({types, places, time, price, additionalOptions}) {
-    this._types = types;
+  constructor({type, places, time, price, options}) {
+    this._type = type;
     this._places = places;
     this._time = time;
     this._price = price;
-    this._additionalOptions = additionalOptions;
+    this._options = options;
   }
 
   getElement() {
@@ -21,9 +23,9 @@ export class Event {
     return `<li class="trip-events__item">
       <div class="event">
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="img/icons/${this._types[getRandomBetween(0, 9)].icon}" alt="Event type icon">
+          <img class="event__type-icon" width="42" height="42" src="img/icons/${EventTypes.find((item) => item.NAME === this._type).ICON}" alt="Event type icon">
         </div>
-        <h3 class="event__title">${toCapitalize(getRandomFromArray(this._types).name)} ${getRandomFromArray(this._types).pretext} ${this._places[Math.floor(Math.random() * 8)].split(` `).map((word) => toCapitalize(word)).join(` `)}</h3>
+        <h3 class="event__title">${toCapitalize(this._type)} ${EventTypes.find((item) => item.NAME === this._type).PRETEXT} ${this._places[Math.floor(Math.random() * 8)].split(` `).map((word) => toCapitalize(word)).join(` `)}</h3>
 
         <div class="event__schedule">
           <p class="event__time">
@@ -40,11 +42,11 @@ export class Event {
 
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-          ${shuffleArray(this._additionalOptions).filter((option) => option.isChecked).map((option) => `<li class="event__offer">
-            <span class="event__offer-title">${toCapitalize(option.name)}</span>
+          ${this._options.length > 0 ? this._options.map((optionName) => `<li class="event__offer">
+            <span class="event__offer-title">${toCapitalize(optionName)}</span>
             &plus;
-            &euro;&nbsp;<span class="event__offer-price">${option.cost}</span>
-          </li>`.trim()).join(``)}
+            &euro;&nbsp;<span class="event__offer-price">${EventOptions.get(optionName)}</span>
+          </li>`.trim()).join(``) : ``}
         </ul>
 
         <button class="event__rollup-btn" type="button">
