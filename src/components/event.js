@@ -13,6 +13,8 @@ export class Event {
     if (!this._element) {
       this._element = createElement(this.getTemplate());
     }
+
+    return this._element;
   }
 
   getTemplate() {
@@ -33,12 +35,12 @@ export class Event {
         </div>
 
         <p class="event__price">
-          &euro;&nbsp;<span class="event__price-value">${price}</span>
+          &euro;&nbsp;<span class="event__price-value">${this._price}</span>
         </p>
 
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-          ${shuffleArray(this._additionalOptions).slice(0, getRandomBetween(0, 2)).map((option) => `<li class="event__offer">
+          ${shuffleArray(this._additionalOptions).filter((option) => option.isChecked).map((option) => `<li class="event__offer">
             <span class="event__offer-title">${toCapitalize(option.name)}</span>
             &plus;
             &euro;&nbsp;<span class="event__offer-price">${option.cost}</span>
@@ -50,5 +52,6 @@ export class Event {
         </button>
       </div>
     </li>`.trim();
+
   }
 }

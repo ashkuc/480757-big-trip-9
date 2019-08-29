@@ -16,11 +16,13 @@ export class EventForm {
     if (!this._element) {
       this._element = createElement(this.getTemplate());
     }
+
+    return this._element;
   }
 
   getTemplate() {
     return `<li class="trip-events__item">
-      <form class="event  event--edit" action="#" method="post">
+      <form class="event event--edit" action="#" method="post">
         <header class="event__header">
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -56,7 +58,7 @@ export class EventForm {
             <label class="event__label  event__type-output" for="event-destination-1">
               ${toCapitalize(getRandomFromArray(this._types).name)} ${getRandomFromArray(this._types).pretext}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${places[Math.floor(Math.random() * 8)].split(` `).map((word) => toCapitalize(word)).join(` `)}" list="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${this._places[Math.floor(Math.random() * 8)].split(` `).map((word) => toCapitalize(word)).join(` `)}" list="destination-list-1">
             <datalist id="destination-list-1">
               ${this._places.map((place) => `<option value="${place.split(` `).map((word) => toCapitalize(word)).join(` `)}"></option>`.trim()).join(``)}
             </datalist>
@@ -106,8 +108,8 @@ export class EventForm {
             <div class="event__available-offers">
 
               ${this._additionalOptions.map((option) => `<div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-${option.name.split(/ /).slice(-1)}" ${option.isChecked ? `checked` : ``}>
-                <label class="event__offer-label" for="event-offer-luggage-1">
+                <input class="event__offer-checkbox  visually-hidden" id="event-offer-${option.name.split(/ /).slice(-1)}-1" type="checkbox" name="event-offer-${option.name.split(/ /).slice(-1)}" ${option.isChecked ? `checked` : ``}>
+                <label class="event__offer-label" for="event-offer-${option.name.split(/ /).slice(-1)}-1">
                   <span class="event__offer-title">${toCapitalize(option.name)}</span>
                   &plus;
                   &euro;&nbsp;<span class="event__offer-price">${option.cost}</span>
