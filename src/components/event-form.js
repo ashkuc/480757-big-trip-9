@@ -109,12 +109,12 @@ export class EventForm {
 
             <div class="event__available-offers">
 
-              ${Array.from(EventOptions).map((option) => `<div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-${option[0].split(/ /).slice(-1)}-1" type="checkbox" name="event-offer-${option[0].split(/ /).slice(-1)}" ${this._options.includes(option[0]) ? `checked` : ``}>
-                <label class="event__offer-label" for="event-offer-${option[0].split(/ /).slice(-1)}-1">
-                  <span class="event__offer-title">${toCapitalize(option[0])}</span>
+              ${EventOptions.map((option) => `<div class="event__offer-selector">
+                <input class="event__offer-checkbox  visually-hidden" id="event-offer-${option.NAME.split(/ /).slice(-1)}-1" type="checkbox" name="event-offer-${option.NAME.split(/ /).slice(-1)}" ${this._options.includes(option.NAME) ? `checked` : ``}>
+                <label class="event__offer-label" for="event-offer-${option.NAME.split(/ /).slice(-1)}-1">
+                  <span class="event__offer-title">${toCapitalize(option.NAME)}</span>
                   &plus;
-                  &euro;&nbsp;<span class="event__offer-price">${option[1]}</span>
+                  &euro;&nbsp;<span class="event__offer-price">${option.COST}</span>
                 </label>
               </div>`.trim()).join(``)}
             </div>

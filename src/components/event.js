@@ -45,7 +45,7 @@ export class Event {
           ${this._options.length > 0 ? this._options.map((optionName) => `<li class="event__offer">
             <span class="event__offer-title">${toCapitalize(optionName)}</span>
             &plus;
-            &euro;&nbsp;<span class="event__offer-price">${EventOptions.get(optionName)}</span>
+            &euro;&nbsp;<span class="event__offer-price">${EventOptions.find((option) => option.NAME === optionName).COST}</span>
           </li>`.trim()).join(``) : ``}
         </ul>
 

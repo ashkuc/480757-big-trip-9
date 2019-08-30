@@ -1,6 +1,18 @@
-export const EventOptions = new Map([
-  [`add luggage`, `10`],
-  [`switch to comfort`, `150`],
-  [`add meal`, `2`],
-  [`choose seats`, `9`],
-]);
+export const EventOptions = [
+  {
+    NAME: `add luggage`,
+    COST: `10`
+  },
+  {
+    NAME: `switch to comfort`,
+    COST: `150`
+  },
+  {
+    NAME: `add meal`,
+    COST: `2`
+  },
+  {
+    NAME: `choose seats`,
+    COST: `9`
+  },
+];
