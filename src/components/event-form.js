@@ -1,14 +1,35 @@
-import {toCapitalize, toTimeForEdit, getRandomFromArray} from './utils.js';
+import {toCapitalize, toTimeForEdit, createElement} from './utils.js';
+import {EventTypes} from '../event-types.js';
+import {EventOptions} from '../event-options.js';
 
-const getEventFormMarkup = ({types, places, time, price, additionalOptions, description, photos}) => {
-  return `
-    <li class="trip-events__item">
-      <form class="event  event--edit" action="#" method="post">
+export class EventForm {
+  constructor({type, places, time, price, options, description, photos}) {
+    this._type = type;
+    this._places = places;
+    this._time = time;
+    this._price = price;
+    this._options = options;
+    this._description = description;
+    this._photos = photos;
+    this._element = null;
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  getTemplate() {
+    return `<li class="trip-events__item">
+      <form class="event event--edit" action="#" method="post">
         <header class="event__header">
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-1">
               <span class="visually-hidden">Choose event type</span>
-              <img class="event__type-icon" width="17" height="17" src="img/icons/flight.png" alt="Event type icon">
+              <img class="event__type-icon" width="17" height="17" src="img/icons/${EventTypes.find((item) => item.NAME === this._type).ICON}" alt="Event type icon">
             </label>
             <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -16,9 +37,9 @@ const getEventFormMarkup = ({types, places, time, price, additionalOptions, desc
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Transfer</legend>
 
-                ${types.map((type) => type.isMovement ? `<div class="event__type-item">
-                  <input id="event-type-${type.name}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.name}">
-                  <label class="event__type-label  event__type-label--${type.name}" for="event-type-${type.name}-1">${toCapitalize(type.name)}</label>
+                ${EventTypes.map((type) => type.IS_MOVEMENT ? `<div class="event__type-item">
+                  <input id="event-type-${type.NAME}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.NAME}"${type.NAME === this._type ? ` checked` : ``}>
+                  <label class="event__type-label  event__type-label--${type.NAME}" for="event-type-${type.NAME}-1">${toCapitalize(type.NAME)}</label>
                 </div>`.trim() : ``).join(``)}
 
               </fieldset>
@@ -26,9 +47,9 @@ const getEventFormMarkup = ({types, places, time, price, additionalOptions, desc
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Activity</legend>
 
-                ${types.map((type) => !type.isMovement ? `<div class="event__type-item">
-                  <input id="event-type-${type.name}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.name}">
-                  <label class="event__type-label  event__type-label--${type.name}" for="event-type-${type.name}-1">${toCapitalize(type.name)}</label>
+                ${EventTypes.map((type) => !type.IS_MOVEMENT ? `<div class="event__type-item">
+                  <input id="event-type-${type.NAME}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.NAME}"${type.NAME === this._type ? ` checked` : ``}>
+                  <label class="event__type-label  event__type-label--${type.NAME}" for="event-type-${type.NAME}-1">${toCapitalize(type.NAME)}</label>
                 </div>`.trim() : ``).join(``)}
 
               </fieldset>
@@ -37,11 +58,11 @@ const getEventFormMarkup = ({types, places, time, price, additionalOptions, desc
 
           <div class="event__field-group  event__field-group--destination">
             <label class="event__label  event__type-output" for="event-destination-1">
-              ${toCapitalize(getRandomFromArray(types).name)} ${getRandomFromArray(types).pretext}
+              ${toCapitalize(this._type)} ${EventTypes.find((item) => item.NAME === this._type).PRETEXT}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${places[Math.floor(Math.random() * 8)].split(` `).map((word) => toCapitalize(word)).join(` `)}" list="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${this._places[Math.floor(Math.random() * 8)].split(` `).map((word) => toCapitalize(word)).join(` `)}" list="destination-list-1">
             <datalist id="destination-list-1">
-              ${places.map((place) => `<option value="${place.split(` `).map((word) => toCapitalize(word)).join(` `)}"></option>`.trim()).join(``)}
+              ${this._places.map((place) => `<option value="${place.split(` `).map((word) => toCapitalize(word)).join(` `)}"></option>`.trim()).join(``)}
             </datalist>
           </div>
 
@@ -49,12 +70,12 @@ const getEventFormMarkup = ({types, places, time, price, additionalOptions, desc
             <label class="visually-hidden" for="event-start-time-1">
               From
             </label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${toTimeForEdit(time.start)}">
+            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${toTimeForEdit(this._time.start)}">
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">
               To
             </label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${toTimeForEdit(time.end)}">
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${toTimeForEdit(this._time.end)}">
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -62,7 +83,7 @@ const getEventFormMarkup = ({types, places, time, price, additionalOptions, desc
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${this._price}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -88,12 +109,12 @@ const getEventFormMarkup = ({types, places, time, price, additionalOptions, desc
 
             <div class="event__available-offers">
 
-              ${additionalOptions.map((option) => `<div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-${option.name.split(/ /).slice(-1)}" ${option.isChecked ? `checked` : ``}>
-                <label class="event__offer-label" for="event-offer-luggage-1">
-                  <span class="event__offer-title">${toCapitalize(option.name)}</span>
+              ${EventOptions.map((option) => `<div class="event__offer-selector">
+                <input class="event__offer-checkbox  visually-hidden" id="event-offer-${option.NAME.split(/ /).slice(-1)}-1" type="checkbox" name="event-offer-${option.NAME.split(/ /).slice(-1)}" ${this._options.includes(option.NAME) ? `checked` : ``}>
+                <label class="event__offer-label" for="event-offer-${option.NAME.split(/ /).slice(-1)}-1">
+                  <span class="event__offer-title">${toCapitalize(option.NAME)}</span>
                   &plus;
-                  &euro;&nbsp;<span class="event__offer-price">${option.cost}</span>
+                  &euro;&nbsp;<span class="event__offer-price">${option.COST}</span>
                 </label>
               </div>`.trim()).join(``)}
             </div>
@@ -101,18 +122,16 @@ const getEventFormMarkup = ({types, places, time, price, additionalOptions, desc
 
           <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${description}</p>
+            <p class="event__destination-description">${this._description}</p>
 
             <div class="event__photos-container">
               <div class="event__photos-tape">
-                ${photos.map((photo) => `<img class="event__photo" src="${photo}" alt="Event photo">`.trim()).join(``)}
+                ${this._photos.map((photo) => `<img class="event__photo" src="${photo}" alt="Event photo">`.trim()).join(``)}
               </div>
             </div>
           </section>
         </section>
       </form>
-    </li>
-  `;
-};
-
-export {getEventFormMarkup};
+    </li>`.trim();
+  }
+}

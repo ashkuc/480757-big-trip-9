@@ -1,6 +1,6 @@
 import {createElement} from './utils.js';
 
-export class Day {
+export class MenuContainer {
   constructor() {
     this._element = null;
   }
@@ -14,7 +14,7 @@ export class Day {
   }
 
   getTemplate() {
-    return `<li class="trip-days__item day">     
-    </li>`.trim();
+    return `<nav class="trip-controls__trip-tabs trip-tabs">
+    </nav>`.trim();
   }
 }

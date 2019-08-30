@@ -1,6 +1,6 @@
 import {createElement} from './utils.js';
 
-export class Day {
+export class FilterContainer {
   constructor() {
     this._element = null;
   }
@@ -14,7 +14,8 @@ export class Day {
   }
 
   getTemplate() {
-    return `<li class="trip-days__item day">     
-    </li>`.trim();
+    return `<form class="trip-filters" action="#" method="get">
+      <button class="visually-hidden" type="submit">Accept filter</button>
+    </form>`.trim();
   }
 }
