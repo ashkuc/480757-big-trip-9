@@ -20,20 +20,15 @@ export class Route {
     switch (places.length) {
       case 3:
         return `${toCapitalize(places[0])} &mdash; ${toCapitalize(places[1])} &mdash; ${toCapitalize(places[places.length - 1])}`;
-        brake;
       case 2:
-          return `${toCapitalize(places[0])} &mdash; ${toCapitalize(places[1])}`;
-        brake;
+        return `${toCapitalize(places[0])} &mdash; ${toCapitalize(places[1])}`;
       case 1:
-          return `${toCapitalize(places[0])}`;
-        brake;
+        return `${toCapitalize(places[0])}`;
       case 0:
-          return ``;
-        brake;
+        return ``;
       default:
         return `${toCapitalize(places[0])} &mdash; ... &mdash; ${toCapitalize(places[places.length - 1])}`;
-        brake;
-    };
+    }
   }
 
   getPeriod() {
