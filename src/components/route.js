@@ -17,12 +17,17 @@ export class Route {
   getRoute() {
     let places = new Set(this._events.map((event) => getRandomFromArray(event.places)));
     places = Array.from(places);
-    if (places.length > 3) {
-      return `${toCapitalize(places[0])} &mdash; ... &mdash; ${toCapitalize(places[places.length - 1])}`;
-    } else if (places.length === 3) {
-      return `${toCapitalize(places[0])} &mdash; ${toCapitalize(places[1])} &mdash; ${toCapitalize(places[places.length - 1])}`;
-    } else {
-      return `${toCapitalize(places[0])} &mdash; ${toCapitalize(places[1])}`;
+    switch (places.length) {
+      case 3:
+        return `${toCapitalize(places[0])} &mdash; ${toCapitalize(places[1])} &mdash; ${toCapitalize(places[places.length - 1])}`;
+      case 2:
+        return `${toCapitalize(places[0])} &mdash; ${toCapitalize(places[1])}`;
+      case 1:
+        return `${toCapitalize(places[0])}`;
+      case 0:
+        return ``;
+      default:
+        return `${toCapitalize(places[0])} &mdash; ... &mdash; ${toCapitalize(places[places.length - 1])}`;
     }
   }
 

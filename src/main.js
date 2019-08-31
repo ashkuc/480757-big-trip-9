@@ -13,6 +13,7 @@ import {DayInfo} from './components/day-info.js';
 import {EventsList} from './components/events-list.js';
 import {Event} from './components/event.js';
 import {EventForm} from './components/event-form.js';
+import {NoEvents} from './components/no-events.js';
 
 const EVENTS_NUMBER = 4;
 
@@ -25,7 +26,7 @@ const eventMocks = new Array(EVENTS_NUMBER).fill(``).map(getEvent);
 const menuItems = getMenuItems();
 const filterItems = getFilterItems();
 const sortItems = getSortItems();
-const totalSum = eventMocks.map((event) => event.price).reduce((a, b) => a + b);
+let totalSum = 0;
 
 const route = new Route(eventMocks);
 const menuContainer = new MenuContainer();
@@ -35,6 +36,7 @@ const daysList = new DaysList();
 const day = new Day();
 const dayInfo = new DayInfo();
 const eventsList = new EventsList();
+const noEvents = new NoEvents();
 
 // Menu
 const renderMenuItem = (menuItemInfo) => {
@@ -118,12 +120,27 @@ const renderEvents = () => {
   render(day.getElement(), eventsList.getElement(), Position.BEFOREEND);
 };
 
+const showTotalSum = () => {
+  if (eventMocks.length > 0) {
+    totalSum = eventMocks.map((event) => event.price).reduce((a, b) => a + b);
+    tripTotalCost.textContent = totalSum;
+  }
+};
+
+const renderMainContent = () => {
+  if (eventMocks.length === 0) {
+    render(tripEventsContainer, noEvents.getElement(), Position.BEFOREEND);
+  } else {
+    render(tripEventsContainer, daysList.getElement(), Position.BEFOREEND);
+    render(daysList.getElement(), day.getElement(), Position.BEFOREEND);
+    render(day.getElement(), dayInfo.getElement(), Position.BEFOREEND);
+    renderEvents();
+    showTotalSum();
+  }
+};
+
 render(tripInfoContainer, route.getElement(), Position.AFTERBEGIN);
 renderMenu();
 renderFilter();
 renderSort();
-render(tripEventsContainer, daysList.getElement(), Position.BEFOREEND);
-render(daysList.getElement(), day.getElement(), Position.BEFOREEND);
-render(day.getElement(), dayInfo.getElement(), Position.BEFOREEND);
-renderEvents();
-tripTotalCost.textContent = totalSum;
+renderMainContent();
