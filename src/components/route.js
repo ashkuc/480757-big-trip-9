@@ -1,7 +1,7 @@
 import AbstractComponent from './abstract-component.js';
 import {toCapitalize, getRandomFromArray} from './utils.js';
 
-export class Route extends AbstractComponent {
+export default class extends AbstractComponent {
   constructor(events) {
     super();
     this._MAX_PLACES_TO_SHOW = 4;

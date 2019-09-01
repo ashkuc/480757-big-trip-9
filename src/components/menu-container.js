@@ -1,6 +1,6 @@
 import AbstractComponent from './abstract-component.js';
 
-export class MenuContainer extends AbstractComponent {
+export default class extends AbstractComponent {
   constructor() {
     super();
   }

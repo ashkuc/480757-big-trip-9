@@ -3,7 +3,7 @@ import {toCapitalize, toTimeForEdit} from './utils.js';
 import {EventTypes} from '../event-types.js';
 import {EventOptions} from '../event-options.js';
 
-export class EventForm extends AbstractComponent {
+export default class extends AbstractComponent {
   constructor({type, places, time, price, options, description, photos}) {
     super();
     this._type = type;

@@ -1,6 +1,6 @@
 import AbstractComponent from './abstract-component.js';
 
-export class FilterContainer extends AbstractComponent {
+export default class extends AbstractComponent {
   constructor() {
     super();
   }

@@ -1,7 +1,7 @@
 import AbstractComponent from './abstract-component.js';
 import {toCapitalize} from './utils.js';
 
-export class MenuItem extends AbstractComponent {
+export default class extends AbstractComponent {
   constructor(menuItem) {
     super();
     this._name = menuItem.name;

@@ -1,6 +1,6 @@
 import AbstractComponent from './abstract-component.js';
 
-export class SortItem extends AbstractComponent {
+export default class extends AbstractComponent {
   constructor(sortItem) {
     super();
     this._name = sortItem.name;

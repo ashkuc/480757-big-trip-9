@@ -1,7 +1,7 @@
 import AbstractComponent from './abstract-component.js';
 import {toCapitalize} from './utils.js';
 
-export class FilterItem extends AbstractComponent {
+export default class extends AbstractComponent {
   constructor(filterItem) {
     super();
     this._name = filterItem.name;

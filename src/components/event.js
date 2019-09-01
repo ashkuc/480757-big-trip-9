@@ -3,7 +3,7 @@ import {toCapitalize, getRandomBetween} from './utils.js';
 import {EventTypes} from '../event-types.js';
 import {EventOptions} from '../event-options.js';
 
-export class Event extends AbstractComponent {
+export default class extends AbstractComponent {
   constructor({type, places, time, price, options}) {
     super();
     this._type = type;
