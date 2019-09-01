@@ -5,7 +5,7 @@ import MenuContainer from './components/menu-container.js';
 import MenuItem from './components/menu-item.js';
 import FilterContainer from './components/filter-container.js';
 import FilterItem from './components/filter-item.js';
-import TripController from './components/trip-controller.js';
+import TripController from './components/controllers/trip-controller.js';
 
 const EVENTS_NUMBER = 4;
 

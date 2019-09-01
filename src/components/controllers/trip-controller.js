@@ -1,14 +1,14 @@
-import {Position, render} from './utils.js';
-import {getSortItems} from '../sample-data.js';
-import DaysList from './days-list.js';
-import Day from './day.js';
-import DayInfo from './day-info.js';
-import EventsList from './events-list.js';
-import Event from './event.js';
-import EventForm from './event-form.js';
-import SortContainer from './sort-container.js';
-import SortItem from './sort-item.js';
-import NoEvents from './no-events.js';
+import {Position, render} from '../utils.js';
+import {getSortItems} from '../../sample-data.js';
+import DaysList from '../days-list.js';
+import Day from '../day.js';
+import DayInfo from '../day-info.js';
+import EventsList from '../events-list.js';
+import Event from '../event.js';
+import EventForm from '../event-form.js';
+import SortContainer from '../sort-container.js';
+import SortItem from '../sort-item.js';
+import NoEvents from '../no-events.js';
 
 export default class {
   constructor(container, events) {

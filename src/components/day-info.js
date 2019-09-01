@@ -1,10 +1,6 @@
 import AbstractComponent from './abstract-component.js';
 
-export default class extends AbstractComponent {
-  constructor() {
-    super();
-  }
-
+export default class DayInfo extends AbstractComponent {
   getTemplate() {
     return `<div class="day__info">
       <span class="day__counter">1</span>
