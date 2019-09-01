@@ -1,18 +1,6 @@
-import {createElement} from './utils.js';
+import AbstractComponent from './abstract-component.js';
 
-export class SortContainer {
-  constructor() {
-    this._element = null;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
+export default class SortContainer extends AbstractComponent {
   getTemplate() {
     return `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
       <span class="trip-sort__item  trip-sort__item--day">Day</span>

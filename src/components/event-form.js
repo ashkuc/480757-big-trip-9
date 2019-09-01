@@ -1,9 +1,11 @@
-import {toCapitalize, toTimeForEdit, createElement} from './utils.js';
+import AbstractComponent from './abstract-component.js';
+import {toCapitalize, toTimeForEdit} from './utils.js';
 import {EventTypes} from '../event-types.js';
 import {EventOptions} from '../event-options.js';
 
-export class EventForm {
+export default class EventForm extends AbstractComponent {
   constructor({type, places, time, price, options, description, photos}) {
+    super();
     this._type = type;
     this._places = places;
     this._time = time;
@@ -11,15 +13,6 @@ export class EventForm {
     this._options = options;
     this._description = description;
     this._photos = photos;
-    this._element = null;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
   }
 
   getTemplate() {

@@ -1,18 +1,6 @@
-import {createElement} from './utils.js';
+import AbstractComponent from './abstract-component.js';
 
-export class FilterContainer {
-  constructor() {
-    this._element = null;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
+export default class FilterContainer extends AbstractComponent {
   getTemplate() {
     return `<form class="trip-filters" action="#" method="get">
       <button class="visually-hidden" type="submit">Accept filter</button>
