@@ -1,18 +1,11 @@
-import {createElement, toCapitalize} from './utils.js';
+import AbstractComponent from './abstract-component.js';
+import {toCapitalize} from './utils.js';
 
-export class FilterItem {
+export class FilterItem extends AbstractComponent {
   constructor(filterItem) {
+    super();
     this._name = filterItem.name;
     this._isChecked = filterItem.isChecked;
-    this._element = null;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
   }
 
   getTemplate() {

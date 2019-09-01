@@ -1,22 +1,16 @@
-import {toCapitalize, getRandomBetween, createElement} from './utils.js';
+import AbstractComponent from './abstract-component.js';
+import {toCapitalize, getRandomBetween} from './utils.js';
 import {EventTypes} from '../event-types.js';
 import {EventOptions} from '../event-options.js';
 
-export class Event {
+export class Event extends AbstractComponent {
   constructor({type, places, time, price, options}) {
+    super();
     this._type = type;
     this._places = places;
     this._time = time;
     this._price = price;
     this._options = options;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
   }
 
   getTemplate() {

@@ -1,17 +1,10 @@
-import {toCapitalize, getRandomFromArray, createElement} from './utils.js';
+import AbstractComponent from './abstract-component.js';
+import {toCapitalize, getRandomFromArray} from './utils.js';
 
-export class Route {
+export class Route extends AbstractComponent {
   constructor(events) {
+    super();
     this._events = events;
-    this._element = null;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
   }
 
   getRoute() {

@@ -1,18 +1,11 @@
-import {createElement, toCapitalize} from './utils.js';
+import AbstractComponent from './abstract-component.js';
+import {toCapitalize} from './utils.js';
 
-export class MenuItem {
+export class MenuItem extends AbstractComponent {
   constructor(menuItem) {
+    super();
     this._name = menuItem.name;
     this._isActive = menuItem.isActive;
-    this._element = null;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
   }
 
   getTemplate() {
