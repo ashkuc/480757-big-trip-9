@@ -21,6 +21,7 @@ export default class {
     this._sortItems = getSortItems();
     this._sortContainer = new SortContainer();
     this._noEvents = new NoEvents();
+    // this._onSortItemClick = this._onSortItemClick.bind(this);
   }
 
   _renderSortItem(sortItemInfo) {
@@ -30,12 +31,19 @@ export default class {
 
   _renderSort() {
     this._sortItems.forEach((sortItemInfo) => this._renderSortItem(sortItemInfo));
+    this._sortContainer.getElement().addEventListener(`click`, this._onSortItemClick)
     render(this._container.querySelector(`h2`), this._sortContainer.getElement(), Position.AFTER);
   }
 
-  _renderEvent(eventInfo) {
+  // _onSortItemClick(evt) {
+  //   if (evt.target.tagName === `INPUT`) {
+
+  //   }
+  // }
+
+  _renderEvent(eventInfo, index) {
     const event = new Event(eventInfo);
-    const eventForm = new EventForm(eventInfo);
+    const eventForm = new EventForm(eventInfo, index);
 
     const onEscKeyDown = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
@@ -77,7 +85,7 @@ export default class {
   }
 
   _renderEvents() {
-    this._events.forEach((eventInfo) => this._renderEvent(eventInfo));
+    this._events.forEach((eventInfo, index) => this._renderEvent(eventInfo, index + 1));
     render(this._day.getElement(), this._eventsList.getElement(), Position.BEFOREEND);
   }
 

@@ -1,14 +1,16 @@
 import AbstractComponent from './abstract-component.js';
-import {toCapitalize, getRandomBetween} from './utils.js';
+import {toCapitalize} from './utils.js';
 import {EventTypes} from '../event-types.js';
 import {EventOptions} from '../event-options.js';
 
 export default class Event extends AbstractComponent {
-  constructor({type, places, time, price, options}) {
+  constructor({type, places, timeStart, duration, price, options}) {
     super();
     this._type = type;
     this._places = places;
-    this._time = time;
+    this._timeStart = timeStart;
+    this._duration = duration;
+    this._timeEnd = this._timeStart + this._duration;
     this._price = price;
     this._options = options;
   }
@@ -23,11 +25,11 @@ export default class Event extends AbstractComponent {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${new Date(this._time.start).toISOString().split(`:`).slice(0, 2).join(`:`)}">${new Date(this._time.start).toISOString().split(/T|:/).slice(1, 3).join(`:`)}</time>
+            <time class="event__start-time" datetime="${new Date(this._timeStart).toLocaleString().split(/:| /).slice(1, 3).join(`:`)}">${new Date(this._timeStart).toLocaleString().split(/:| /).slice(1, 3).join(`:`)}</time>
             &mdash;
-            <time class="event__end-time" datetime="${new Date(this._time.start + (getRandomBetween(30, 180) * 60 * 1000)).toISOString().split(`:`).slice(0, 2).join(`:`)}">${new Date(this._time.start + (getRandomBetween(30, 180) * 60 * 1000)).toISOString().split(/T|:/).slice(1, 3).join(`:`)}</time>
+            <time class="event__end-time" datetime="${new Date(this._timeEnd).toLocaleString().split(/:| /).slice(1, 3).join(`:`)}">${new Date(this._timeEnd).toLocaleString().split(/:| /).slice(1, 3).join(`:`)}</time>
           </p>
-          <p class="event__duration">${Math.floor((new Date(this._time.end) - new Date(this._time.start)) / 1000 / 60 / 60)}H ${(new Date(this._time.end) - new Date(this._time.start)) / 1000 / 60 % 60}M</p>
+          <p class="event__duration">${Math.floor(this._duration / 1000 / 60 / 60)}H ${this._duration / 1000 / 60 % 60}M</p>
         </div>
 
         <p class="event__price">

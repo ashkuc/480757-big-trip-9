@@ -10,7 +10,7 @@ export default class SortItem extends AbstractComponent {
 
   getTemplate() {
     return `<div class="trip-sort__item  trip-sort__item--${this._name}">
-      <input id="sort-${this._name}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${this._name}"${this._isChecked ? ` checked` : ``}>
+      <input id="sort-${this._name}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${this._name}"${this._isChecked ? ` checked` : ``} data-sort-type="${this._name}">
       <label class="trip-sort__btn" for="sort-${this._name}">
         ${this._name}
         ${this._hasIcon ? `<svg class="trip-sort__direction-icon" width="8" height="10" viewBox="0 0 8 10">
