@@ -2,13 +2,17 @@ import AbstractComponent from './abstract-component.js';
 import {toCapitalize, toTimeForEdit} from './utils.js';
 import {EventTypes} from '../event-types.js';
 import {EventOptions} from '../event-options.js';
+import {EventPlaces} from '../event-places.js';
 
 export default class EventForm extends AbstractComponent {
-  constructor({type, places, time, price, options, description, photos}) {
+  constructor({type, place, timeStart, duration, price, options, description, photos}, index) {
     super();
+    this._index = index;
     this._type = type;
-    this._places = places;
-    this._time = time;
+    this._place = place;
+    this._timeStart = timeStart;
+    this._duration = duration;
+    this._timeEnd = this._timeStart + this._duration;
     this._price = price;
     this._options = options;
     this._description = description;
@@ -20,19 +24,19 @@ export default class EventForm extends AbstractComponent {
       <form class="event event--edit" action="#" method="post">
         <header class="event__header">
           <div class="event__type-wrapper">
-            <label class="event__type  event__type-btn" for="event-type-toggle-1">
+            <label class="event__type  event__type-btn" for="event-type-toggle-${this._index}">
               <span class="visually-hidden">Choose event type</span>
               <img class="event__type-icon" width="17" height="17" src="img/icons/${EventTypes.find((item) => item.NAME === this._type).ICON}" alt="Event type icon">
             </label>
-            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${this._index}" type="checkbox">
 
             <div class="event__type-list">
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Transfer</legend>
 
                 ${EventTypes.map((type) => type.IS_MOVEMENT ? `<div class="event__type-item">
-                  <input id="event-type-${type.NAME}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.NAME}"${type.NAME === this._type ? ` checked` : ``}>
-                  <label class="event__type-label  event__type-label--${type.NAME}" for="event-type-${type.NAME}-1">${toCapitalize(type.NAME)}</label>
+                  <input id="event-type-${type.NAME}-${this._index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.NAME}"${type.NAME === this._type ? ` checked` : ``}>
+                  <label class="event__type-label  event__type-label--${type.NAME}" for="event-type-${type.NAME}-${this._index}">${toCapitalize(type.NAME)}</label>
                 </div>`.trim() : ``).join(``)}
 
               </fieldset>
@@ -41,8 +45,8 @@ export default class EventForm extends AbstractComponent {
                 <legend class="visually-hidden">Activity</legend>
 
                 ${EventTypes.map((type) => !type.IS_MOVEMENT ? `<div class="event__type-item">
-                  <input id="event-type-${type.NAME}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.NAME}"${type.NAME === this._type ? ` checked` : ``}>
-                  <label class="event__type-label  event__type-label--${type.NAME}" for="event-type-${type.NAME}-1">${toCapitalize(type.NAME)}</label>
+                  <input id="event-type-${type.NAME}-${this._index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.NAME}"${type.NAME === this._type ? ` checked` : ``}>
+                  <label class="event__type-label  event__type-label--${type.NAME}" for="event-type-${type.NAME}-${this._index}">${toCapitalize(type.NAME)}</label>
                 </div>`.trim() : ``).join(``)}
 
               </fieldset>
@@ -50,40 +54,40 @@ export default class EventForm extends AbstractComponent {
           </div>
 
           <div class="event__field-group  event__field-group--destination">
-            <label class="event__label  event__type-output" for="event-destination-1">
+            <label class="event__label  event__type-output" for="event-destination-${this._index}">
               ${toCapitalize(this._type)} ${EventTypes.find((item) => item.NAME === this._type).PRETEXT}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${this._places[Math.floor(Math.random() * 8)].split(` `).map((word) => toCapitalize(word)).join(` `)}" list="destination-list-1">
-            <datalist id="destination-list-1">
-              ${this._places.map((place) => `<option value="${place.split(` `).map((word) => toCapitalize(word)).join(` `)}"></option>`.trim()).join(``)}
+            <input class="event__input  event__input--destination" id="event-destination-${this._index}" type="text" name="event-destination" value="${toCapitalize(this._place)}" list="destination-list-${this._index}">
+            <datalist id="destination-list-${this._index}">
+              ${EventPlaces.map((place) => `<option value="${place.split(` `).map((word) => toCapitalize(word)).join(` `)}"></option>`.trim()).join(``)}
             </datalist>
           </div>
 
           <div class="event__field-group  event__field-group--time">
-            <label class="visually-hidden" for="event-start-time-1">
+            <label class="visually-hidden" for="event-start-time-${this._index}">
               From
             </label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${toTimeForEdit(this._time.start)}">
+            <input class="event__input  event__input--time" id="event-start-time-${this._index}" type="text" name="event-start-time" value="${toTimeForEdit(this._timeStart)}">
             &mdash;
-            <label class="visually-hidden" for="event-end-time-1">
+            <label class="visually-hidden" for="event-end-time-${this._index}">
               To
             </label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${toTimeForEdit(this._time.end)}">
+            <input class="event__input  event__input--time" id="event-end-time-${this._index}" type="text" name="event-end-time" value="${toTimeForEdit(this._timeStart + this._duration)}">
           </div>
 
           <div class="event__field-group  event__field-group--price">
-            <label class="event__label" for="event-price-1">
+            <label class="event__label" for="event-price-${this._index}">
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${this._price}">
+            <input class="event__input  event__input--price" id="event-price-${this._index}" type="text" name="event-price" value="${this._price}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
           <button class="event__reset-btn" type="reset">Delete</button>
 
-          <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" checked>
-          <label class="event__favorite-btn" for="event-favorite-1">
+          <input id="event-favorite-${this._index}" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" checked>
+          <label class="event__favorite-btn" for="event-favorite-${this._index}">
             <span class="visually-hidden">Add to favorite</span>
             <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
               <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
@@ -103,8 +107,8 @@ export default class EventForm extends AbstractComponent {
             <div class="event__available-offers">
 
               ${EventOptions.map((option) => `<div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-${option.NAME.split(/ /).slice(-1)}-1" type="checkbox" name="event-offer-${option.NAME.split(/ /).slice(-1)}" ${this._options.includes(option.NAME) ? `checked` : ``}>
-                <label class="event__offer-label" for="event-offer-${option.NAME.split(/ /).slice(-1)}-1">
+                <input class="event__offer-checkbox  visually-hidden" id="event-offer-${option.NAME.split(/ /).slice(-1)}-${this._index}" type="checkbox" name="event-offer-${option.NAME.split(/ /).slice(-1)}" ${this._options.includes(option.NAME) ? `checked` : ``}>
+                <label class="event__offer-label" for="event-offer-${option.NAME.split(/ /).slice(-1)}-${this._index}">
                   <span class="event__offer-title">${toCapitalize(option.NAME)}</span>
                   &plus;
                   &euro;&nbsp;<span class="event__offer-price">${option.COST}</span>
