@@ -1,5 +1,5 @@
 import AbstractComponent from './abstract-component.js';
-import {toCapitalize, getRandomFromArray} from './utils.js';
+import {toCapitalize} from './utils.js';
 
 export default class Route extends AbstractComponent {
   constructor(events) {

@@ -28,7 +28,7 @@ export default class {
 
   _renderSort() {
     this._sortItems.forEach((sortItemInfo) => this._renderSortItem(sortItemInfo));
-    this._sortContainer.getElement().addEventListener(`click`, this._onSortItemClick)
+    this._sortContainer.getElement().addEventListener(`click`, this._onSortItemClick);
     render(this._container.querySelector(`h2`), this._sortContainer.getElement(), Position.AFTER);
   }
 
@@ -110,14 +110,7 @@ export default class {
   }
 
   _renderDaysList() {
-    const eventDays = Array.from(
-      new Set(
-        this._events
-        .slice()
-        .sort((a, b) => a.timeStart - b.timeStart)
-        .map((event) => Math.floor(event.timeStart / 1000 / 60 / 60 / 24))
-      )
-    );
+    const eventDays = Array.from(new Set(this._events.slice().sort((a, b) => a.timeStart - b.timeStart).map((event) => Math.floor(event.timeStart / 1000 / 60 / 60 / 24))));
     let currentDayNumber = 1;
 
     eventDays.forEach((dayDate, index, days) => {
@@ -127,7 +120,7 @@ export default class {
       }
       this._renderDay(dayDate, currentDayNumber);
     });
-    
+
     render(this._container, this._daysList.getElement(), Position.BEFOREEND);
   }
 
