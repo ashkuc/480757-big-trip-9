@@ -4,10 +4,10 @@ import {EventTypes} from '../event-types.js';
 import {EventOptions} from '../event-options.js';
 
 export default class Event extends AbstractComponent {
-  constructor({type, places, timeStart, duration, price, options}) {
+  constructor({type, place, timeStart, duration, price, options}) {
     super();
     this._type = type;
-    this._places = places;
+    this._place = place;
     this._timeStart = timeStart;
     this._duration = duration;
     this._timeEnd = this._timeStart + this._duration;
@@ -21,7 +21,7 @@ export default class Event extends AbstractComponent {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${EventTypes.find((item) => item.NAME === this._type).ICON}" alt="Event type icon">
         </div>
-        <h3 class="event__title">${toCapitalize(this._type)} ${EventTypes.find((item) => item.NAME === this._type).PRETEXT} ${this._places[Math.floor(Math.random() * 8)].split(` `).map((word) => toCapitalize(word)).join(` `)}</h3>
+        <h3 class="event__title">${toCapitalize(this._type)} ${EventTypes.find((item) => item.NAME === this._type).PRETEXT} ${toCapitalize(this._place)}</h3>
 
         <div class="event__schedule">
           <p class="event__time">

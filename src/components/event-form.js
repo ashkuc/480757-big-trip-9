@@ -2,13 +2,14 @@ import AbstractComponent from './abstract-component.js';
 import {toCapitalize, toTimeForEdit} from './utils.js';
 import {EventTypes} from '../event-types.js';
 import {EventOptions} from '../event-options.js';
+import {EventPlaces} from '../event-places.js';
 
 export default class EventForm extends AbstractComponent {
-  constructor({type, places, timeStart, duration, price, options, description, photos}, index) {
+  constructor({type, place, timeStart, duration, price, options, description, photos}, index) {
     super();
     this._index = index;
     this._type = type;
-    this._places = places;
+    this._place = place;
     this._timeStart = timeStart;
     this._duration = duration;
     this._timeEnd = this._timeStart + this._duration;
@@ -56,9 +57,9 @@ export default class EventForm extends AbstractComponent {
             <label class="event__label  event__type-output" for="event-destination-${this._index}">
               ${toCapitalize(this._type)} ${EventTypes.find((item) => item.NAME === this._type).PRETEXT}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-${this._index}" type="text" name="event-destination" value="${this._places[Math.floor(Math.random() * 8)].split(` `).map((word) => toCapitalize(word)).join(` `)}" list="destination-list-${this._index}">
+            <input class="event__input  event__input--destination" id="event-destination-${this._index}" type="text" name="event-destination" value="${toCapitalize(this._place)}" list="destination-list-${this._index}">
             <datalist id="destination-list-${this._index}">
-              ${this._places.map((place) => `<option value="${place.split(` `).map((word) => toCapitalize(word)).join(` `)}"></option>`.trim()).join(``)}
+              ${EventPlaces.map((place) => `<option value="${place.split(` `).map((word) => toCapitalize(word)).join(` `)}"></option>`.trim()).join(``)}
             </datalist>
           </div>
 

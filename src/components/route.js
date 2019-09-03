@@ -9,8 +9,7 @@ export default class Route extends AbstractComponent {
   }
 
   _getRoute() {
-    let places = new Set(this._events.map((event) => getRandomFromArray(event.places)));
-    places = Array.from(places);
+    let places = Array.from(new Set(this._events.map((event) => event.place)));
 
     return places.length < this._MAX_PLACES_TO_SHOW ? places.map(toCapitalize).join(` &mdash; `) : `${toCapitalize(places[0])} &mdash; ... &mdash; ${toCapitalize(places[places.length - 1])}`;
   }
