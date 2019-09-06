@@ -102,12 +102,12 @@ export default class EventForm extends AbstractComponent {
         <section class="event__details">
 
           <section class="event__section  event__section--offers">
-            <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+            <h3 class="event__section-title event__section-title--offers">Offers</h3>
 
             <div class="event__available-offers">
 
               ${EventOptions.map((option) => `<div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-${option.NAME.split(/ /).slice(-1)}-${this._index}" type="checkbox" name="event-offer-${option.NAME.split(/ /).slice(-1)}" ${this._options.includes(option.NAME) ? `checked` : ``}>
+                <input class="event__offer-checkbox visually-hidden" id="event-offer-${option.NAME.split(/ /).slice(-1)}-${this._index}" type="checkbox" name="event-offer-${option.NAME.split(/ /).slice(-1)}" ${option.NAME.split(` `).some((word) => this._options.includes(word)) ? `checked` : ``}>
                 <label class="event__offer-label" for="event-offer-${option.NAME.split(/ /).slice(-1)}-${this._index}">
                   <span class="event__offer-title">${toCapitalize(option.NAME)}</span>
                   &plus;
@@ -117,8 +117,8 @@ export default class EventForm extends AbstractComponent {
             </div>
           </section>
 
-          <section class="event__section  event__section--destination">
-            <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+          <section class="event__section event__section--destination">
+            <h3 class="event__section-title event__section-title--destination">Destination</h3>
             <p class="event__destination-description">${this._description}</p>
 
             <div class="event__photos-container">

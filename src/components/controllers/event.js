@@ -47,9 +47,22 @@ export default class EventController {
       });
     });
 
-    this._eventForm.getElement().querySelector(`form`).addEventListener(`submit`, () => {
-      this._container.getElement().replaceChild(this._event.getElement(), this._eventForm.getElement());
-      document.removeEventListener(`keydown`, onEscKeyDown);
+    this._eventForm.getElement().querySelector(`form`).addEventListener(`submit`, (evt) => {
+      evt.preventDefault();
+      const formData = new FormData(evt.target);
+      const entry = {
+        type: formData.get(`event-type`),
+        place: formData.get(`event-destination`),
+        photos: Array.from(this._eventForm.getElement().querySelectorAll(`.event__photo`)).map((item) => item.getAttribute(`src`)),
+        description: this._eventForm.getElement().querySelector(`.event__destination-description`).textContent,
+        timeStart: new Date(formData.get(`event-start-time`)).getTime(),
+        duration: new Date(formData.get(`event-end-time`)).getTime() - new Date(formData.get(`event-start-time`)).getTime(),
+        price: formData.get(`event-price`),
+      };
+      console.log(entry.price);
+
+      // this._container.getElement().replaceChild(this._event.getElement(), this._eventForm.getElement());
+      // document.removeEventListener(`keydown`, onEscKeyDown);
     });
 
     render(this._container.getElement(), this._event.getElement(), Position.BEFOREEND);

@@ -39,9 +39,9 @@ export default class Event extends AbstractComponent {
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
           ${this._options.length > 0 ? this._options.map((optionName) => `<li class="event__offer">
-            <span class="event__offer-title">${toCapitalize(optionName)}</span>
+            <span class="event__offer-title">${toCapitalize(EventOptions[EventOptions.findIndex((eventOption) => eventOption.NAME.split(` `).includes(optionName))].NAME)}</span>
             &plus;
-            &euro;&nbsp;<span class="event__offer-price">${EventOptions.find((option) => option.NAME === optionName).COST}</span>
+            &euro;&nbsp;<span class="event__offer-price">${EventOptions[EventOptions.findIndex((eventOption) => eventOption.NAME.split(` `).includes(optionName))].COST}</span>
           </li>`.trim()).join(``) : ``}
         </ul>
 

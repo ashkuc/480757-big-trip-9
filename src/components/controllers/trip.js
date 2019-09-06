@@ -18,6 +18,8 @@ export default class {
     this._sortContainer = new SortContainer();
     this._noEvents = new NoEvents();
     this._onSortItemClick = this._onSortItemClick.bind(this);
+
+    this._onDataChange = this._onDataChange.bind(this);
   }
 
   _renderSortItem(sortItemInfo) {
@@ -55,7 +57,7 @@ export default class {
   }
 
   _renderEvent(eventsList, eventInfo, index) {
-    new EventController(eventsList, eventInfo, index);
+    new EventController(eventsList, eventInfo, index, this._onDataChange);
   }
 
   _renderEvents(day, eventsList, eventsInfo) {
@@ -104,6 +106,10 @@ export default class {
       this._renderSort();
       this._renderDaysList();
     }
+  }
+
+  _onDataChange(newData, oldData) {
+    this._events[this._events.findIndex((item) => item === oldData)] = newData;
   }
 
   init() {

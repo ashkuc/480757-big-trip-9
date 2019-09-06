@@ -32,10 +32,10 @@ export const getEvent = () => {
     duration: getRandomBetween(30, 240) * 60 * 1000,
     price: getRandomBetween(2, 20) * 10,
     options: shuffleArray([
-      `add luggage`,
-      `switch to comfort`,
-      `add meal`,
-      `choose seats`,
+      `luggage`,
+      `comfort`,
+      `meal`,
+      `seats`,
     ]).slice(0, getRandomBetween(0, 4)),
   };
 };

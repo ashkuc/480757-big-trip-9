@@ -9,7 +9,7 @@ export const shuffleArray = (array) => {
 
 export const toTimeForEdit = (miliseconds) => {
   const dateTime = new Date(miliseconds).toLocaleString();
-  let date = dateTime.split(/\.|,/).slice(0, 3).map((element) => element.slice(0, 2)).join(`/`);
+  let date = dateTime.split(/\.|,/).slice(0, 3).map((element) => element.length === 4 ? element.slice(2, 4) : element).join(`/`);
   let time = dateTime.split(/\.| |,|:/).slice(4, 6).join(`:`);
   return `${date} ${time}`;
 };
