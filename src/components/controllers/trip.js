@@ -99,6 +99,15 @@ export default class {
     render(this._container, this._daysList.getElement(), Position.BEFOREEND);
   }
 
+  _onDataChange(newData, oldData) {
+    this._events[this._events.findIndex((item) => item === oldData)] = newData;
+    unrender(this._daysList.getElement());
+    this._daysList.removeElement();
+    unrender(this._sortContainer.getElement());
+    this._sortContainer.removeElement();
+    this._renderMainContent();
+  }
+
   _renderMainContent() {
     if (this._events.length === 0) {
       render(this._container, this._noEvents.getElement(), Position.BEFOREEND);
@@ -106,10 +115,6 @@ export default class {
       this._renderSort();
       this._renderDaysList();
     }
-  }
-
-  _onDataChange(newData, oldData) {
-    this._events[this._events.findIndex((item) => item === oldData)] = newData;
   }
 
   init() {

@@ -1,4 +1,4 @@
-import {Position, render} from '../utils.js';
+import {Position, render, timeFromEditToMilliseconds} from '../utils.js';
 import Event from '../event.js';
 import EventForm from '../event-form.js';
 
@@ -55,7 +55,7 @@ export default class EventController {
         place: formData.get(`event-destination`),
         photos: Array.from(this._eventForm.getElement().querySelectorAll(`.event__photo`)).map((item) => item.getAttribute(`src`)),
         description: this._eventForm.getElement().querySelector(`.event__destination-description`).textContent,
-        timeStart: new Date(formData.get(`event-start-time`)).getTime(),
+        timeStart: new Date(timeFromEditToMilliseconds(formData.get(`event-start-time`))).getTime(),
         duration: new Date(formData.get(`event-end-time`)).getTime() - new Date(formData.get(`event-start-time`)).getTime(),
         price: formData.get(`event-price`),
         options: Array.from(this._eventForm.getElement().querySelectorAll(`.event__offer-checkbox:checked`)).map((input) => input.getAttribute(`data-offer-name`)),

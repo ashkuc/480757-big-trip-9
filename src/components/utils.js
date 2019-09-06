@@ -54,3 +54,10 @@ export const unrender = (element) => {
     element.remove();
   }
 };
+
+// Это временная функция, пока я не подключу moment.js ///
+export const timeFromEditToMilliseconds = (timeFromEdit) => {
+  let timeArray = timeFromEdit.split(`/`);
+  [timeArray[0], timeArray[1]] = [timeArray[1], timeArray[0]];
+  return timeArray.join(`/`);
+};
