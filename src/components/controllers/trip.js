@@ -3,11 +3,10 @@ import {getSortItems} from '../../sample-data.js';
 import DaysList from '../days-list.js';
 import Day from '../day.js';
 import EventsList from '../events-list.js';
-import Event from '../event.js';
-import EventForm from '../event-form.js';
 import SortContainer from '../sort-container.js';
 import SortItem from '../sort-item.js';
 import NoEvents from '../no-events.js';
+import EventController from './event';
 
 export default class {
   constructor(container, events) {
@@ -56,46 +55,7 @@ export default class {
   }
 
   _renderEvent(eventsList, eventInfo, index) {
-    const event = new Event(eventInfo);
-    const eventForm = new EventForm(eventInfo, index);
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        eventsList.getElement().replaceChild(event.getElement(), eventForm.getElement());
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
-    event.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, (evt) => {
-      evt.preventDefault();
-      eventsList.getElement().replaceChild(eventForm.getElement(), event.getElement());
-      document.addEventListener(`keydown`, onEscKeyDown);
-    });
-
-    eventForm.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, (evt) => {
-      evt.preventDefault();
-      eventsList.getElement().replaceChild(event.getElement(), eventForm.getElement());
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    });
-
-    eventForm.getElement().querySelectorAll(`input[type="text"]`).forEach((input) => {
-      input.addEventListener(`focus`, () => {
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      });
-    });
-
-    eventForm.getElement().querySelectorAll(`input[type="text"]`).forEach((input) => {
-      input.addEventListener(`blur`, () => {
-        document.addEventListener(`keydown`, onEscKeyDown);
-      });
-    });
-
-    eventForm.getElement().querySelector(`form`).addEventListener(`submit`, () => {
-      eventsList.getElement().replaceChild(event.getElement(), eventForm.getElement());
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    });
-
-    render(eventsList.getElement(), event.getElement(), Position.BEFOREEND);
+    new EventController(eventsList, eventInfo, index);
   }
 
   _renderEvents(day, eventsList, eventsInfo) {
