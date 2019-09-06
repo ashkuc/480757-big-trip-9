@@ -58,11 +58,13 @@ export default class EventController {
         timeStart: new Date(formData.get(`event-start-time`)).getTime(),
         duration: new Date(formData.get(`event-end-time`)).getTime() - new Date(formData.get(`event-start-time`)).getTime(),
         price: formData.get(`event-price`),
+        options: Array.from(this._eventForm.getElement().querySelectorAll(`.event__offer-checkbox:checked`)).map((input) => input.getAttribute(`data-offer-name`)),
       };
-      console.log(entry.price);
 
-      // this._container.getElement().replaceChild(this._event.getElement(), this._eventForm.getElement());
-      // document.removeEventListener(`keydown`, onEscKeyDown);
+      this._onDataChange(entry, this._data);
+
+      this._container.getElement().replaceChild(this._event.getElement(), this._eventForm.getElement());
+      document.removeEventListener(`keydown`, onEscKeyDown);
     });
 
     render(this._container.getElement(), this._event.getElement(), Position.BEFOREEND);

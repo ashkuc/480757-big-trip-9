@@ -107,7 +107,7 @@ export default class EventForm extends AbstractComponent {
             <div class="event__available-offers">
 
               ${EventOptions.map((option) => `<div class="event__offer-selector">
-                <input class="event__offer-checkbox visually-hidden" id="event-offer-${option.NAME.split(/ /).slice(-1)}-${this._index}" type="checkbox" name="event-offer-${option.NAME.split(/ /).slice(-1)}" ${option.NAME.split(` `).some((word) => this._options.includes(word)) ? `checked` : ``}>
+                <input class="event__offer-checkbox visually-hidden" id="event-offer-${option.NAME.split(/ /).slice(-1)}-${this._index}" type="checkbox" name="event-offer-${option.NAME.split(/ /).slice(-1)}" ${option.NAME.split(` `).some((word) => this._options.includes(word)) ? `checked` : ``} data-offer-name="${option.NAME.split(` `)[option.NAME.split(` `).length - 1]}">
                 <label class="event__offer-label" for="event-offer-${option.NAME.split(/ /).slice(-1)}-${this._index}">
                   <span class="event__offer-title">${toCapitalize(option.NAME)}</span>
                   &plus;
