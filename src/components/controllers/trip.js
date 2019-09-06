@@ -1,4 +1,4 @@
-import {Position, render} from '../utils.js';
+import {Position, render, unrender} from '../utils.js';
 import {getSortItems} from '../../sample-data.js';
 import DaysList from '../days-list.js';
 import Day from '../day.js';
@@ -34,18 +34,22 @@ export default class {
 
   _onSortItemClick(evt) {
     if (evt.target.tagName === `INPUT`) {
-      this._daysList.getElement().innerHTML = ``;
+      unrender(this._daysList.getElement());
+      this._daysList.removeElement();
       switch (evt.target.getAttribute(`data-sort-type`)) {
         case `event`:
           this._renderDaysList();
+          this._sortContainer.getElement().querySelector(`.trip-sort__item--day`).textContent = `day`;
           break;
         case `time`:
           this._sortedEvents = this._events.slice().sort((a, b) => a.timeStart - b.timeStart);
           this._renderSortedEvents();
+          this._sortContainer.getElement().querySelector(`.trip-sort__item--day`).textContent = ``;
           break;
         case `price`:
           this._sortedEvents = this._events.slice().sort((a, b) => a.price - b.price);
           this._renderSortedEvents();
+          this._sortContainer.getElement().querySelector(`.trip-sort__item--day`).textContent = ``;
           break;
       }
     }
@@ -130,6 +134,7 @@ export default class {
 
     this._renderEvents(day, eventsList, this._sortedEvents);
     render(this._daysList.getElement(), day.getElement(), Position.BEFOREEND);
+    render(this._container, this._daysList.getElement(), Position.BEFOREEND);
   }
 
   _renderMainContent() {
