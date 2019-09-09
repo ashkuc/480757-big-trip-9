@@ -1,10 +1,10 @@
 import AbstractComponent from './abstract-component.js';
 import {toCapitalize} from './utils.js';
 import {EventTypes} from '../event-types.js';
-import {EventOptions} from '../event-options.js';
+import {EventOffers} from '../event-offers.js';
 
 export default class Event extends AbstractComponent {
-  constructor({type, place, timeStart, duration, price, options}) {
+  constructor({type, place, timeStart, duration, price, offers}) {
     super();
     this._type = type;
     this._place = place;
@@ -12,10 +12,11 @@ export default class Event extends AbstractComponent {
     this._duration = duration;
     this._timeEnd = this._timeStart + this._duration;
     this._price = price;
-    this._options = options;
+    this._offers = offers;
   }
 
   getTemplate() {
+    console.log(EventOffers[EventOffers.findIndex((eventOffer) => eventOffer.type.split(` `).includes(`taxi`))].type);
     return `<li class="trip-events__item">
       <div class="event">
         <div class="event__type">
@@ -38,10 +39,10 @@ export default class Event extends AbstractComponent {
 
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-          ${this._options.length > 0 ? this._options.map((optionName) => `<li class="event__offer">
-            <span class="event__offer-title">${toCapitalize(EventOptions[EventOptions.findIndex((eventOption) => eventOption.NAME.split(` `).includes(optionName))].NAME)}</span>
+          ${this._offers.length > 0 ? this._offers.map((offerType) => `<li class="event__offer">
+            <span class="event__offer-title">${toCapitalize(EventOffers[EventOffers.findIndex((eventOffer) => eventOffer.type.split(` `).includes(offerType))].type)}</span>
             &plus;
-            &euro;&nbsp;<span class="event__offer-price">${EventOptions[EventOptions.findIndex((eventOption) => eventOption.NAME.split(` `).includes(optionName))].COST}</span>
+            &euro;&nbsp;<span class="event__offer-price">${EventOffers[EventOffers.findIndex((eventOffer) => eventOffer.type.split(` `).includes(offerType))].COST}</span>
           </li>`.trim()).join(``) : ``}
         </ul>
 

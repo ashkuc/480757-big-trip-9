@@ -31,7 +31,7 @@ export const getEvent = () => {
     timeStart: Date.now() + getRandomBetween(1, 5) * 24 * 60 * 60 * 1000 + getRandomBetween(0, 180) * 60 * 1000,
     duration: getRandomBetween(30, 240) * 60 * 1000,
     price: getRandomBetween(2, 20) * 10,
-    options: shuffleArray([
+    offers: shuffleArray([
       `luggage`,
       `comfort`,
       `meal`,
