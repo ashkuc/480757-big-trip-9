@@ -1,9 +1,9 @@
-import {shuffleArray, getRandomBetween, getRandomFromArray, getRandomBoolean} from './components/utils.js';
+import {shuffleArray, getRandomBetween, getRandomFromArray, getRandomBoolean} from '../components/utils.js';
 
 export const getEvent = () => {
   return {
-    base_price: 222,
-    date_from: new Date(Date.now()).toISOString(),
+    base_price: getRandomBetween(4, 18) * 100,
+    date_from: new Date(Date.now() + getRandomBetween(1, 7) * 24 * 60 * 60 * 1000).toISOString(),
     date_to: new Date(Date.now()).toISOString(),
     destination: getRandomFromArray([
       `chamonix`,

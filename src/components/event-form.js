@@ -1,8 +1,8 @@
 import AbstractComponent from './abstract-component.js';
 import {toCapitalize, toTimeForEdit} from './utils.js';
-import {EventTypes} from '../event-types.js';
-import {EventOffers} from '../event-offers.js';
-import {EventPlaces} from '../event-places.js';
+import {Types} from '../data-info/types.js';
+import {Offers} from '../data-info/offers.js';
+import {DesinationsSample as Destinations} from '../data-info/destinations-sample.js';
 
 export default class EventForm extends AbstractComponent {
   constructor({type, place, timeStart, duration, price, options, description, photos}, index) {

@@ -1,7 +1,7 @@
 import AbstractComponent from './abstract-component.js';
 import {toCapitalize} from './utils.js';
-import {EventTypes} from '../event-types.js';
-import {EventOffers} from '../event-offers.js';
+import {Types} from '../data-info/types.js';
+import {Offers} from '../data-info/offers.js';
 
 export default class Event extends AbstractComponent {
   constructor({type, place, timeStart, duration, price, offers}) {

@@ -1,3 +1,5 @@
+import {shuffleArray, getRandomBetween} from '../components/utils.js';
+
 export const DesinationsSample = [
   {
     description: `Chamonix, is a beautiful city, a true asian pearl, with crowded streets.`,

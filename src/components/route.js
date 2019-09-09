@@ -9,9 +9,9 @@ export default class Route extends AbstractComponent {
   }
 
   _getRoute() {
-    let places = Array.from(new Set(this._events.map((event) => event.place)));
+    let destinations = Array.from(new Set(this._events.map((event) => event.destination)));
 
-    return places.length < this._MAX_PLACES_TO_SHOW ? places.map(toCapitalize).join(` &mdash; `) : `${toCapitalize(places[0])} &mdash; ... &mdash; ${toCapitalize(places[places.length - 1])}`;
+    return destinations.length < this._MAX_PLACES_TO_SHOW ? destinations.map(toCapitalize).join(` &mdash; `) : `${toCapitalize(destinations[0])} &mdash; ... &mdash; ${toCapitalize(destinations[destinations.length - 1])}`;
   }
 
   _getPeriod() {

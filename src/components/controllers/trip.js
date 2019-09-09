@@ -1,5 +1,5 @@
 import {Position, render, unrender} from '../utils.js';
-import {getSortItems} from '../../sample-data.js';
+import {getSortItems} from '../../data-info/sample-data.js';
 import DaysList from '../days-list.js';
 import Day from '../day.js';
 import EventsList from '../events-list.js';

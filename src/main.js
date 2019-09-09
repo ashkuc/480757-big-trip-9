@@ -1,4 +1,4 @@
-import {getEvent, getMenuItems, getFilterItems} from './sample-data.js';
+import {getEvent, getMenuItems, getFilterItems} from './data-info/sample-data.js';
 import {Position, render} from './components/utils.js';
 import Route from './components/route.js';
 import MenuContainer from './components/menu-container.js';
