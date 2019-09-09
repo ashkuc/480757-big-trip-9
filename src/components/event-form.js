@@ -38,7 +38,7 @@ export default class EventForm extends AbstractComponent {
 
                 ${Types.map((type) => type.IS_MOVEMENT ? `<div class="event__type-item">
                   <input id="event-type-${type.NAME}-${this._index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.NAME}"${type.NAME === this._type ? ` checked` : ``}>
-                  <label class="event__type-label  event__type-label--${type.NAME}" for="event-type-${type.NAME}-${this._index}">${toCapitalize(type.NAME)}</label>
+                  <label class="event__type-label event__type-label--${type.NAME}" for="event-type-${type.NAME}-${this._index}">${toCapitalize(type.NAME)}</label>
                 </div>`.trim() : ``).join(``)}
 
               </fieldset>
@@ -48,7 +48,7 @@ export default class EventForm extends AbstractComponent {
 
                 ${Types.map((type) => !type.IS_MOVEMENT ? `<div class="event__type-item">
                   <input id="event-type-${type.NAME}-${this._index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.NAME}"${type.NAME === this._type ? ` checked` : ``}>
-                  <label class="event__type-label  event__type-label--${type.NAME}" for="event-type-${type.NAME}-${this._index}">${toCapitalize(type.NAME)}</label>
+                  <label class="event__type-label  event__type-label--${type.NAME === `check` ? `check-in` : type.NAME}" for="event-type-${type.NAME}-${this._index}">${toCapitalize(type.NAME)}</label>
                 </div>`.trim() : ``).join(``)}
 
               </fieldset>
@@ -107,8 +107,8 @@ export default class EventForm extends AbstractComponent {
             <h3 class="event__section-title event__section-title--offers">Offers</h3>
             <div class="event__available-offers">
               ${this._possible_offers.map((offer) => `<div class="event__offer-selector">
-                <input class="event__offer-checkbox visually-hidden" id="event-offer-${offer.name.replace(/ /g, /-/)}-${this._index}" type="checkbox" name="event-offer-${offer.name.replace(/ /g, /-/)}" ${this._offers.some((offerName) => offerName === offer.name) ? `checked` : ``} data-offer-name="${offer.name.replace(/ /g, /-/)}">
-                <label class="event__offer-label" for="event-offer-${offer.name.replace(/ /g, /-/)}-${this._index}">
+                <input class="event__offer-checkbox visually-hidden" id="event-offer-${offer.name.replace(/ /g, `-`)}-${this._index}" type="checkbox" name="event-offer-${offer.name.replace(/ /g, `-`)}" ${this._offers.some((offerName) => offerName === offer.name) ? `checked` : ``} data-offer-name="${offer.name.replace(/ /g, `-`)}">
+                <label class="event__offer-label" for="event-offer-${offer.name.replace(/ /g, `-`)}-${this._index}">
                   <span class="event__offer-title">${toCapitalize(offer.name)}</span>
                   &plus;
                   &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
