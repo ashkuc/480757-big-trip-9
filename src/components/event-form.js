@@ -15,7 +15,7 @@ export default class EventForm extends AbstractComponent {
     this._destination = destination;
     this._is_favorite = is_favorite;
     this._possible_offers = Offers[Offers.findIndex((offer) => offer.type === this._type)].offers;
-    this._checked_offers = offers;
+    this._offers = this._possible_offers.slice(0, 3).map((offer) => offer.name);
     this._description = Destinations[Destinations.findIndex((destination) => destination.name.toLowerCase() === this._destination.toLowerCase())].description;
     this._pictures = Destinations[Destinations.findIndex((destination) => destination.name.toLowerCase() === this._destination.toLowerCase())].pictures;
     this._index = index;
@@ -61,7 +61,7 @@ export default class EventForm extends AbstractComponent {
             </label>
             <input class="event__input  event__input--destination" id="event-destination-${this._index}" type="text" name="event-destination" value="${toCapitalize(this._destination)}" list="destination-list-${this._index}">
             <datalist id="destination-list-${this._index}">
-              ${TypePlaces[this._type].map((place) => `<option value="${place.split(` `).map((word) => toCapitalize(word)).join(` `)}"></option>`.trim()).join(``)}
+              ${TypePlaces[this._type.toUpperCase()].map((place) => `<option value="${place.split(` `).map((word) => toCapitalize(word)).join(` `)}"></option>`.trim()).join(``)}
             </datalist>
           </div>
 
@@ -105,10 +105,9 @@ export default class EventForm extends AbstractComponent {
 
           <section class="event__section  event__section--offers">
             <h3 class="event__section-title event__section-title--offers">Offers</h3>
-
             <div class="event__available-offers">
               ${this._possible_offers.map((offer) => `<div class="event__offer-selector">
-                <input class="event__offer-checkbox visually-hidden" id="event-offer-${offer.name.replace(/ /g, /-/)}-${this._index}" type="checkbox" name="event-offer-${offer.name.replace(/ /g, /-/)}" ${this._checked_offers.some((offerName) => offerName === offer.name) ? `checked` : ``} data-offer-name="${offer.name.replace(/ /g, /-/)}">
+                <input class="event__offer-checkbox visually-hidden" id="event-offer-${offer.name.replace(/ /g, /-/)}-${this._index}" type="checkbox" name="event-offer-${offer.name.replace(/ /g, /-/)}" ${this._offers.some((offerName) => offerName === offer.name) ? `checked` : ``} data-offer-name="${offer.name.replace(/ /g, /-/)}">
                 <label class="event__offer-label" for="event-offer-${offer.name.replace(/ /g, /-/)}-${this._index}">
                   <span class="event__offer-title">${toCapitalize(offer.name)}</span>
                   &plus;
@@ -124,7 +123,7 @@ export default class EventForm extends AbstractComponent {
 
             <div class="event__photos-container">
               <div class="event__photos-tape">
-                ${this._pictures.map((picture) => `<img class="event__photo" src="${picture}" alt="Event photo">`.trim()).join(``)}
+                ${this._pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`.trim()).join(``)}
               </div>
             </div>
           </section>

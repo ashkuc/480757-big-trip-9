@@ -119,7 +119,7 @@ export const Offers = [
     ]
   },
   {
-    type: `check-in`,
+    type: `check`,
     offers: [
       {
         name: `add breakfast`,

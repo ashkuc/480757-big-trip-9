@@ -58,7 +58,7 @@ export const TypePlaces = {
     `museum`,
     `airport`,
   ],
-  SIGHTSEENG: [
+  SIGHTSEEING: [
     `garden`,
     `national park`,
     `museum`,

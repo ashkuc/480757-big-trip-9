@@ -42,8 +42,8 @@ export const Types = [
     IS_MOVEMENT: true,
   },
   {
-    NAME: `check-in`,
-    PRETEXT: ``,
+    NAME: `check`,
+    PRETEXT: `in`,
     ICON: `check-in.png`,
     IS_MOVEMENT: false,
   },
