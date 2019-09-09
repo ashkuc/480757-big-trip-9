@@ -1,4 +1,4 @@
-export const Places = {
+export const TypePlaces = {
   TAXI: [
     `airport`,
     `restaurant`,

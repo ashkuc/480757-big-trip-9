@@ -46,9 +46,9 @@ const renderFilter = () => {
   render(tripControlsHeadings[1], filterContainer.getElement(), Position.AFTER);
 };
 
-const showTotalSum = () => {
+const updateTotalSum = () => {
   if (eventMocks.length > 0) {
-    totalSum = eventMocks.map((event) => event.price).reduce((a, b) => a + b);
+    totalSum = eventMocks.map((event) => event.base_price).reduce((a, b) => a + b);
     tripTotalCost.textContent = totalSum;
   }
 };
@@ -57,4 +57,4 @@ render(tripInfoContainer, route.getElement(), Position.AFTERBEGIN);
 renderMenu();
 renderFilter();
 tripController.init();
-showTotalSum();
+updateTotalSum();

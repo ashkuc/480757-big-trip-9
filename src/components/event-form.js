@@ -1,22 +1,24 @@
 import AbstractComponent from './abstract-component.js';
-import {toCapitalize, toTimeForEdit} from './utils.js';
+import {toCapitalize, toTimeForEdit, getRandomBetween} from './utils.js';
 import {Types} from '../data-info/types.js';
+import {TypePlaces} from '../data-info/type-places.js';
 import {Offers} from '../data-info/offers.js';
 import {DesinationsSample as Destinations} from '../data-info/destinations-sample.js';
 
 export default class EventForm extends AbstractComponent {
-  constructor({type, place, timeStart, duration, price, options, description, photos}, index) {
+  constructor({base_price, date_from, date_to, destination, is_favorite, offers, type}, index) {
     super();
-    this._index = index;
     this._type = type;
-    this._place = place;
-    this._timeStart = timeStart;
-    this._duration = duration;
-    this._timeEnd = this._timeStart + this._duration;
-    this._price = price;
-    this._options = options;
-    this._description = description;
-    this._photos = photos;
+    this._base_price = base_price;
+    this._date_from = new Date(date_from).getTime();
+    this._date_to = this._date_from + getRandomBetween(6, 24) * 10 * 60 * 1000;
+    this._destination = destination;
+    this._is_favorite = is_favorite;
+    this._possible_offers = Offers[Offers.findIndex((offer) => offer.type === this._type)].offers;
+    this._checked_offers = offers;
+    this._description = Destinations[Destinations.findIndex((destination) => destination.name.toLowerCase() === this._destination.toLowerCase())].description;
+    this._pictures = Destinations[Destinations.findIndex((destination) => destination.name.toLowerCase() === this._destination.toLowerCase())].pictures;
+    this._index = index;
   }
 
   getTemplate() {
@@ -26,7 +28,7 @@ export default class EventForm extends AbstractComponent {
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-${this._index}">
               <span class="visually-hidden">Choose event type</span>
-              <img class="event__type-icon" width="17" height="17" src="img/icons/${EventTypes.find((item) => item.NAME === this._type).ICON}" alt="Event type icon">
+              <img class="event__type-icon" width="17" height="17" src="img/icons/${Types.find((item) => item.NAME === this._type.toLowerCase()).ICON}" alt="Event type icon">
             </label>
             <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${this._index}" type="checkbox">
 
@@ -34,7 +36,7 @@ export default class EventForm extends AbstractComponent {
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Transfer</legend>
 
-                ${EventTypes.map((type) => type.IS_MOVEMENT ? `<div class="event__type-item">
+                ${Types.map((type) => type.IS_MOVEMENT ? `<div class="event__type-item">
                   <input id="event-type-${type.NAME}-${this._index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.NAME}"${type.NAME === this._type ? ` checked` : ``}>
                   <label class="event__type-label  event__type-label--${type.NAME}" for="event-type-${type.NAME}-${this._index}">${toCapitalize(type.NAME)}</label>
                 </div>`.trim() : ``).join(``)}
@@ -44,7 +46,7 @@ export default class EventForm extends AbstractComponent {
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Activity</legend>
 
-                ${EventTypes.map((type) => !type.IS_MOVEMENT ? `<div class="event__type-item">
+                ${Types.map((type) => !type.IS_MOVEMENT ? `<div class="event__type-item">
                   <input id="event-type-${type.NAME}-${this._index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.NAME}"${type.NAME === this._type ? ` checked` : ``}>
                   <label class="event__type-label  event__type-label--${type.NAME}" for="event-type-${type.NAME}-${this._index}">${toCapitalize(type.NAME)}</label>
                 </div>`.trim() : ``).join(``)}
@@ -55,11 +57,11 @@ export default class EventForm extends AbstractComponent {
 
           <div class="event__field-group  event__field-group--destination">
             <label class="event__label  event__type-output" for="event-destination-${this._index}">
-              ${toCapitalize(this._type)} ${EventTypes.find((item) => item.NAME === this._type).PRETEXT}
+              ${toCapitalize(this._type)} ${Types.find((item) => item.NAME === this._type).PRETEXT}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-${this._index}" type="text" name="event-destination" value="${toCapitalize(this._place)}" list="destination-list-${this._index}">
+            <input class="event__input  event__input--destination" id="event-destination-${this._index}" type="text" name="event-destination" value="${toCapitalize(this._destination)}" list="destination-list-${this._index}">
             <datalist id="destination-list-${this._index}">
-              ${EventPlaces.map((place) => `<option value="${place.split(` `).map((word) => toCapitalize(word)).join(` `)}"></option>`.trim()).join(``)}
+              ${TypePlaces[this._type].map((place) => `<option value="${place.split(` `).map((word) => toCapitalize(word)).join(` `)}"></option>`.trim()).join(``)}
             </datalist>
           </div>
 
@@ -67,12 +69,12 @@ export default class EventForm extends AbstractComponent {
             <label class="visually-hidden" for="event-start-time-${this._index}">
               From
             </label>
-            <input class="event__input  event__input--time" id="event-start-time-${this._index}" type="text" name="event-start-time" value="${toTimeForEdit(this._timeStart)}">
+            <input class="event__input  event__input--time" id="event-start-time-${this._index}" type="text" name="event-start-time" value="${toTimeForEdit(this._date_from)}">
             &mdash;
             <label class="visually-hidden" for="event-end-time-${this._index}">
               To
             </label>
-            <input class="event__input  event__input--time" id="event-end-time-${this._index}" type="text" name="event-end-time" value="${toTimeForEdit(this._timeStart + this._duration)}">
+            <input class="event__input  event__input--time" id="event-end-time-${this._index}" type="text" name="event-end-time" value="${toTimeForEdit(this._date_to)}">
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -80,7 +82,7 @@ export default class EventForm extends AbstractComponent {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-${this._index}" type="text" name="event-price" value="${this._price}">
+            <input class="event__input  event__input--price" id="event-price-${this._index}" type="text" name="event-price" value="${this._base_price}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -105,12 +107,12 @@ export default class EventForm extends AbstractComponent {
             <h3 class="event__section-title event__section-title--offers">Offers</h3>
 
             <div class="event__available-offers">
-              ${EventOffers.map((option) => `<div class="event__offer-selector">
-                <input class="event__offer-checkbox visually-hidden" id="event-offer-${option.NAME.split(/ /).slice(-1)}-${this._index}" type="checkbox" name="event-offer-${option.NAME.split(/ /).slice(-1)}" ${option.NAME.split(` `).some((word) => this._options.includes(word)) ? `checked` : ``} data-offer-name="${option.NAME.split(` `)[option.NAME.split(` `).length - 1]}">
-                <label class="event__offer-label" for="event-offer-${option.NAME.split(/ /).slice(-1)}-${this._index}">
-                  <span class="event__offer-title">${toCapitalize(option.NAME)}</span>
+              ${this._possible_offers.map((offer) => `<div class="event__offer-selector">
+                <input class="event__offer-checkbox visually-hidden" id="event-offer-${offer.name.replace(/ /g, /-/)}-${this._index}" type="checkbox" name="event-offer-${offer.name.replace(/ /g, /-/)}" ${this._checked_offers.some((offerName) => offerName === offer.name) ? `checked` : ``} data-offer-name="${offer.name.replace(/ /g, /-/)}">
+                <label class="event__offer-label" for="event-offer-${offer.name.replace(/ /g, /-/)}-${this._index}">
+                  <span class="event__offer-title">${toCapitalize(offer.name)}</span>
                   &plus;
-                  &euro;&nbsp;<span class="event__offer-price">${option.COST}</span>
+                  &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
                 </label>
               </div>`.trim()).join(``)}
             </div>
@@ -122,7 +124,7 @@ export default class EventForm extends AbstractComponent {
 
             <div class="event__photos-container">
               <div class="event__photos-tape">
-                ${this._photos.map((photo) => `<img class="event__photo" src="${photo}" alt="Event photo">`.trim()).join(``)}
+                ${this._pictures.map((picture) => `<img class="event__photo" src="${picture}" alt="Event photo">`.trim()).join(``)}
               </div>
             </div>
           </section>

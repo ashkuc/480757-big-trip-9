@@ -1,4 +1,4 @@
-export const EventTypes = [
+export const Types = [
   {
     NAME: `taxi`,
     PRETEXT: `to`,
