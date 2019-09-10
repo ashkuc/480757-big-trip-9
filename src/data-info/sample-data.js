@@ -17,8 +17,6 @@ export const getEvent = () => {
     ]),
     is_favorite: getRandomBoolean(),
     offers: shuffleArray([
-      `upgrade to a business class`,
-      `choose the radio station`,
       `add luggage`,
       `order uber`,
       `choose seats`,

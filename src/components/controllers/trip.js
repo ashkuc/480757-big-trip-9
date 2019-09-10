@@ -18,6 +18,8 @@ export default class {
     this._sortContainer = new SortContainer();
     this._noEvents = new NoEvents();
     this._onSortItemClick = this._onSortItemClick.bind(this);
+    this._totalSum = 0;
+    this._tripTotalCost = document.querySelector(`.trip-info__cost-value`);
 
     this._onDataChange = this._onDataChange.bind(this);
   }
@@ -108,12 +110,20 @@ export default class {
     this._renderMainContent();
   }
 
+  _updateTotalSum() {
+    if (this._events.length > 0) {
+      this._totalSum = this._events.map((event) => Number(event.base_price)).reduce((a, b) => a + b);
+      this._tripTotalCost.textContent = this._totalSum;
+    }
+  };
+
   _renderMainContent() {
     if (this._events.length === 0) {
       render(this._container, this._noEvents.getElement(), Position.BEFOREEND);
     } else {
       this._renderSort();
       this._renderDaysList();
+      this._updateTotalSum();
     }
   }
 

@@ -13,7 +13,7 @@ export default class Event extends AbstractComponent {
     this._destination = destination;
     this._is_favorite = is_favorite;
     this._possible_offers = Offers[Offers.findIndex((offer) => offer.type === this._type)].offers;
-    this._offers = this._possible_offers.slice(0, 3).map((offer) => offer.name);
+    this._offers = offers;
   }
 
   getTemplate() {
@@ -39,7 +39,7 @@ export default class Event extends AbstractComponent {
 
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-          ${this._offers.length > 0 ? this._offers.map((offerName) => `<li class="event__offer">
+          ${this._offers.length > 0 ? this._offers.slice(0, 3).map((offerName) => `<li class="event__offer">
             <span class="event__offer-title">${toCapitalize(offerName)}</span>
             &plus;
             &euro;&nbsp;<span class="event__offer-price">${this._possible_offers[this._possible_offers.findIndex((item) => item.name === offerName)].price}</span>

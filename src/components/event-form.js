@@ -15,11 +15,19 @@ export default class EventForm extends AbstractComponent {
     this._destination = destination;
     this._is_favorite = is_favorite;
     this._possible_offers = Offers[Offers.findIndex((offer) => offer.type === this._type)].offers;
-    this._offers = this._possible_offers.slice(0, 3).map((offer) => offer.name);
-    this._description = Destinations[Destinations.findIndex((destination) => destination.name.toLowerCase() === this._destination.toLowerCase())].description;
-    this._pictures = Destinations[Destinations.findIndex((destination) => destination.name.toLowerCase() === this._destination.toLowerCase())].pictures;
+    this._offers = offers;
+    this._description = this._getValue(`description`);
+    this._pictures = this._getValue(`pictures`);
     this._index = index;
   }
+
+  _getValue(propertyName) {
+    let value = null;
+    try {
+      value = Destinations[Destinations.findIndex((destination) => destination.name.toLowerCase() === this._destination.toLowerCase())][propertyName];
+    } catch (err) {};
+    return value;
+  };
 
   getTemplate() {
     return `<li class="trip-events__item">
@@ -88,7 +96,7 @@ export default class EventForm extends AbstractComponent {
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
           <button class="event__reset-btn" type="reset">Delete</button>
 
-          <input id="event-favorite-${this._index}" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" checked>
+          <input id="event-favorite-${this._index}" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${this._is_favorite ? `checked` : ``}>
           <label class="event__favorite-btn" for="event-favorite-${this._index}">
             <span class="visually-hidden">Add to favorite</span>
             <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -117,16 +125,16 @@ export default class EventForm extends AbstractComponent {
             </div>
           </section>
 
-          <section class="event__section event__section--destination">
+          ${this._description ? `<section class="event__section event__section--destination">
             <h3 class="event__section-title event__section-title--destination">Destination</h3>
             <p class="event__destination-description">${this._description}</p>
 
-            <div class="event__photos-container">
+            ${this._pictures ? `<div class="event__photos-container">
               <div class="event__photos-tape">
                 ${this._pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`.trim()).join(``)}
               </div>
-            </div>
-          </section>
+            </div>` : ``}
+          </section>` : ``}
         </section>
       </form>
     </li>`.trim();

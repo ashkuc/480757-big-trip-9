@@ -3,20 +3,24 @@ export const Offers = [
     type: `taxi`,
     offers: [
       {
-        name: `upgrade to a business class`,
+        name: `add luggage`,
         price: 120
       },
       {
-        name: `choose the radio station`,
+        name: `order uber`,
         price: 60
       },
       {
-        name: `add luggage`,
+        name: `choose seats`,
         price: 10
       },
       {
-        name: `order uber`,
+        name: `switch to comfort`,
         price: 30
+      },
+      {
+        name: `travel by train`,
+        price: 45
       }
     ]
   },
@@ -24,50 +28,74 @@ export const Offers = [
     type: `bus`,
     offers: [
       {
-        name: `switch to comfort`,
-        price: 150
+        name: `add luggage`,
+        price: 120
+      },
+      {
+        name: `order uber`,
+        price: 60
       },
       {
         name: `choose seats`,
         price: 10
       },
       {
-        name: `upgrade to a business class`,
-        price: 120
+        name: `switch to comfort`,
+        price: 30
       },
+      {
+        name: `travel by train`,
+        price: 45
+      }
     ]
   },
   {
     type: `train`,
     offers: [
       {
-        name: `switch to comfort`,
-        price: 150
+        name: `add luggage`,
+        price: 120
+      },
+      {
+        name: `order uber`,
+        price: 60
       },
       {
         name: `choose seats`,
         price: 10
       },
       {
-        name: `upgrade to a business class`,
-        price: 120
+        name: `switch to comfort`,
+        price: 30
       },
       {
-        name: `add luggage`,
-        price: 120
-      },
+        name: `travel by train`,
+        price: 45
+      }
     ]
   },
   {
     type: `ship`,
     offers: [
       {
-        name: `upgrade to a business class`,
+        name: `add luggage`,
         price: 120
       },
       {
-        name: `add luggage`,
+        name: `order uber`,
+        price: 60
+      },
+      {
+        name: `choose seats`,
         price: 10
+      },
+      {
+        name: `switch to comfort`,
+        price: 30
+      },
+      {
+        name: `travel by train`,
+        price: 45
       }
     ]
   },
@@ -75,12 +103,24 @@ export const Offers = [
     type: `transport`,
     offers: [
       {
-        name: `travel by train`,
-        price: 20
+        name: `add luggage`,
+        price: 120
       },
       {
-        name: `add luggage`,
+        name: `order uber`,
+        price: 60
+      },
+      {
+        name: `choose seats`,
         price: 10
+      },
+      {
+        name: `switch to comfort`,
+        price: 30
+      },
+      {
+        name: `travel by train`,
+        price: 45
       }
     ]
   },
@@ -88,12 +128,24 @@ export const Offers = [
     type: `drive`,
     offers: [
       {
-        name: `rent a car`,
+        name: `add luggage`,
         price: 120
       },
       {
-        name: `add luggage`,
+        name: `order uber`,
+        price: 60
+      },
+      {
+        name: `choose seats`,
         price: 10
+      },
+      {
+        name: `switch to comfort`,
+        price: 30
+      },
+      {
+        name: `travel by train`,
+        price: 45
       }
     ]
   },
@@ -101,56 +153,100 @@ export const Offers = [
     type: `flight`,
     offers: [
       {
-        name: `choose seats`,
-        price: 10
-      },
-      {
-        name: `upgrade to a business class`,
-        price: 120
-      },
-      {
         name: `add luggage`,
         price: 120
       },
       {
-        name: `add meal`,
-        price: 5
+        name: `order uber`,
+        price: 60
       },
+      {
+        name: `choose seats`,
+        price: 10
+      },
+      {
+        name: `switch to comfort`,
+        price: 30
+      },
+      {
+        name: `travel by train`,
+        price: 45
+      }
     ]
   },
   {
     type: `check`,
     offers: [
       {
-        name: `add breakfast`,
-        price: 20
+        name: `add luggage`,
+        price: 120
       },
+      {
+        name: `order uber`,
+        price: 60
+      },
+      {
+        name: `choose seats`,
+        price: 10
+      },
+      {
+        name: `switch to comfort`,
+        price: 30
+      },
+      {
+        name: `travel by train`,
+        price: 45
+      }
     ]
   },
   {
     type: `sightseeing`,
     offers: [
       {
-        name: `Lunch`,
-        price: 20
+        name: `add luggage`,
+        price: 120
       },
       {
-        name: `Book tickets`,
-        price: 40
+        name: `order uber`,
+        price: 60
       },
+      {
+        name: `choose seats`,
+        price: 10
+      },
+      {
+        name: `switch to comfort`,
+        price: 30
+      },
+      {
+        name: `travel by train`,
+        price: 45
+      }
     ]
   },
   {
     type: `restaurant`,
     offers: [
       {
-        name: `Lunch`,
-        price: 20
+        name: `add luggage`,
+        price: 120
+      },
+      {
+        name: `order uber`,
+        price: 60
       },
       {
         name: `choose seats`,
         price: 10
       },
+      {
+        name: `switch to comfort`,
+        price: 30
+      },
+      {
+        name: `travel by train`,
+        price: 45
+      }
     ]
   }
 ];

@@ -12,12 +12,10 @@ const EVENTS_NUMBER = 4;
 const tripInfoContainer = document.querySelector(`.trip-info`);
 const tripControlsHeadings = document.querySelectorAll(`.trip-controls h2`);
 const tripEventsContainer = document.querySelector(`.trip-events`);
-const tripTotalCost = document.querySelector(`.trip-info__cost-value`);
 
 const eventMocks = new Array(EVENTS_NUMBER).fill(``).map(getEvent);
 const menuItems = getMenuItems();
 const filterItems = getFilterItems();
-let totalSum = 0;
 
 const route = new Route(eventMocks);
 const menuContainer = new MenuContainer();
@@ -46,15 +44,7 @@ const renderFilter = () => {
   render(tripControlsHeadings[1], filterContainer.getElement(), Position.AFTER);
 };
 
-const updateTotalSum = () => {
-  if (eventMocks.length > 0) {
-    totalSum = eventMocks.map((event) => event.base_price).reduce((a, b) => a + b);
-    tripTotalCost.textContent = totalSum;
-  }
-};
-
 render(tripInfoContainer, route.getElement(), Position.AFTERBEGIN);
 renderMenu();
 renderFilter();
 tripController.init();
-updateTotalSum();
