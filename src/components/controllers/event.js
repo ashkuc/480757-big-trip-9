@@ -1,4 +1,8 @@
-import {Position, render, unrender, timeFromEditToMilliseconds, toCapitalize} from '../utils.js';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
+import 'flatpickr/dist/themes/material_blue.css';
+import moment from 'moment';
+import {Position, render, unrender, toCapitalize} from '../utils.js';
 import {TypePlaces} from '../../data-info/type-places.js';
 import {Offers} from '../../data-info/offers.js';
 import {Types} from '../../data-info/types.js';
@@ -20,6 +24,26 @@ export default class EventController {
   }
 
   init() {
+    flatpickr(this._eventForm.getElement().querySelector(`.event__input--time[name="event-start-time"]`), {
+      defaultDate: this._data.dateFrom,
+      enableTime: true,
+      dateFormat: `u`,
+      allowInput: true,
+      time_24hr: true,
+      altInput: true,
+      altFormat: `d/m/y H:i`,
+    });
+
+    flatpickr(this._eventForm.getElement().querySelector(`.event__input--time[name="event-end-time"]`), {
+      defaultDate: this._data.dateTo,
+      enableTime: true,
+      dateFormat: `u`,
+      allowInput: true,
+      time_24hr: true,
+      altInput: true,
+      altFormat: `d/m/y H:i`,
+    });
+    
     const onEscKeyDown = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
         this._container.getElement().replaceChild(this._event.getElement(), this._eventForm.getElement());
@@ -70,8 +94,8 @@ export default class EventController {
 
       const entry = {
         basePrice: formData.get(`event-price`),
-        dateFrom: new Date(timeFromEditToMilliseconds(formData.get(`event-start-time`))).getTime(),
-        dateTo: new Date(timeFromEditToMilliseconds(formData.get(`event-end-time`))).getTime(),
+        dateFrom: Number(formData.get(`event-start-time`)),
+        dateTo: Number(formData.get(`event-end-time`)),
         destination: formData.get(`event-destination`),
         isFavorite: formData.get(`event-favorite`) === `on` ? true : false,
         offers: Array.from(this._eventForm.getElement().querySelectorAll(`.event__offer-checkbox:checked`)).map((input) => input.getAttribute(`data-offer-name`).split(`-`).join(` `)),

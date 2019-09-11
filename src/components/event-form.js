@@ -1,17 +1,19 @@
+import moment from 'moment';
 import AbstractComponent from './abstract-component.js';
-import {toCapitalize, toTimeForEdit, getRandomBetween} from './utils.js';
+import {toCapitalize, toTimeForEdit} from './utils.js';
 import {Types} from '../data-info/types.js';
 import {TypePlaces} from '../data-info/type-places.js';
 import {Offers} from '../data-info/offers.js';
 import {DesinationsSample as Destinations} from '../data-info/destinations-sample.js';
 
 export default class EventForm extends AbstractComponent {
-  constructor({basePrice, dateFrom, destination, isFavorite, offers, type}, index) {
+  constructor({basePrice, dateFrom, dateTo, destination, isFavorite, offers, type}, index) {
     super();
     this._type = type;
     this._basePrice = basePrice;
-    this._dateFrom = new Date(dateFrom).getTime();
-    this._dateTo = this._dateFrom + getRandomBetween(6, 24) * 10 * 60 * 1000;
+    this._dateFrom = dateFrom;
+    this._dateTo = dateTo;
+    this._duration = this._dateTo - this._dateFrom;
     this._destination = destination;
     this._isFavorite = isFavorite;
     this._possibleOffers = Offers[Offers.findIndex((offer) => offer.type === this._type)].offers;
@@ -79,12 +81,12 @@ export default class EventForm extends AbstractComponent {
             <label class="visually-hidden" for="event-start-time-${this._index}">
               From
             </label>
-            <input class="event__input  event__input--time" id="event-start-time-${this._index}" type="text" name="event-start-time" value="${toTimeForEdit(this._dateFrom)}">
+            <input class="event__input  event__input--time" id="event-start-time-${this._index}" type="text" name="event-start-time" value="">
             &mdash;
             <label class="visually-hidden" for="event-end-time-${this._index}">
               To
             </label>
-            <input class="event__input  event__input--time" id="event-end-time-${this._index}" type="text" name="event-end-time" value="${toTimeForEdit(this._dateTo)}">
+            <input class="event__input  event__input--time" id="event-end-time-${this._index}" type="text" name="event-end-time" value="">
           </div>
 
           <div class="event__field-group  event__field-group--price">
