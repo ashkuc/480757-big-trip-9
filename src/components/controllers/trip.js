@@ -12,7 +12,7 @@ export default class {
   constructor(container, events) {
     this._container = container;
     this._events = events;
-    this._sortedEvents = new Array(...this._events);
+    this._eventsForRender = new Array(...this._events);
     this._daysList = new DaysList();
     this._sortItems = getSortItems();
     this._sortContainer = new SortContainer();
@@ -20,6 +20,7 @@ export default class {
     this._onSortItemClick = this._onSortItemClick.bind(this);
     this._totalSum = 0;
     this._tripTotalCost = document.querySelector(`.trip-info__cost-value`);
+    this._currentSortType = `event`;
 
     this._onDataChange = this._onDataChange.bind(this);
   }
@@ -39,22 +40,25 @@ export default class {
     if (evt.target.tagName === `INPUT`) {
       unrender(this._daysList.getElement());
       this._daysList.removeElement();
-      switch (evt.target.getAttribute(`data-sort-type`)) {
-        case `event`:
-          this._renderDaysList();
-          this._sortContainer.getElement().querySelector(`.trip-sort__item--day`).textContent = `day`;
-          break;
-        case `time`:
-          this._sortedEvents = this._events.slice().sort((a, b) => a.timeStart - b.timeStart);
-          this._renderSortedEvents();
-          this._sortContainer.getElement().querySelector(`.trip-sort__item--day`).textContent = ``;
-          break;
-        case `price`:
-          this._sortedEvents = this._events.slice().sort((a, b) => a.price - b.price);
-          this._renderSortedEvents();
-          this._sortContainer.getElement().querySelector(`.trip-sort__item--day`).textContent = ``;
-          break;
-      }
+      this._currentSortType = evt.target.getAttribute(`data-sort-type`);
+      this._reRenderDaysList();
+    }
+  }
+
+  _sortEvents() {
+    switch (this._currentSortType) {
+      case `event`:
+        this._eventsForRender = new Array(...this._events);
+        this._sortContainer.getElement().querySelector(`.trip-sort__item--day`).textContent = `day`;
+        break;
+      case `time`:
+        this._eventsForRender = this._events.slice().sort((a, b) => new Date(a.date_from).getTime() - new Date(b.date_from).getTime());
+        this._sortContainer.getElement().querySelector(`.trip-sort__item--day`).textContent = ``;
+        break;
+      case `price`:
+        this._eventsForRender = this._events.slice().sort((a, b) => a.base_price - b.base_price);
+        this._sortContainer.getElement().querySelector(`.trip-sort__item--day`).textContent = ``;
+        break;
     }
   }
 
@@ -70,7 +74,7 @@ export default class {
   _renderDay(dayDate, currentDayNumber) {
     const day = new Day(dayDate, currentDayNumber);
     const eventsList = new EventsList();
-    const eventsForRender = this._events.filter((event) => Math.floor(new Date(event.date_from).getTime() / 1000 / 60 / 60 / 24) === dayDate);
+    const eventsForRender = this._eventsForRender.filter((event) => Math.floor(new Date(event.date_from).getTime() / 1000 / 60 / 60 / 24) === dayDate);
 
     this._renderEvents(day, eventsList, eventsForRender);
 
@@ -92,11 +96,20 @@ export default class {
     render(this._container, this._daysList.getElement(), Position.BEFOREEND);
   }
 
+  _reRenderDaysList() {
+    this._sortEvents();
+    if (this._currentSortType === `event`) {
+      this._renderDaysList();
+    } else {
+      this._renderSortedEvents();
+    }
+  }
+
   _renderSortedEvents() {
     const day = new Day();
     const eventsList = new EventsList();
 
-    this._renderEvents(day, eventsList, this._sortedEvents);
+    this._renderEvents(day, eventsList, this._eventsForRender);
     render(this._daysList.getElement(), day.getElement(), Position.BEFOREEND);
     render(this._container, this._daysList.getElement(), Position.BEFOREEND);
   }
@@ -105,9 +118,8 @@ export default class {
     this._events[this._events.findIndex((item) => item === oldData)] = newData;
     unrender(this._daysList.getElement());
     this._daysList.removeElement();
-    unrender(this._sortContainer.getElement());
-    this._sortContainer.removeElement();
-    this._renderMainContent();
+    this._reRenderDaysList();
+    this._updateTotalSum();
   }
 
   _updateTotalSum() {
