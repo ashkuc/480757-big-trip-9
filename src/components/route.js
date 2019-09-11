@@ -1,5 +1,5 @@
 import AbstractComponent from './abstract-component.js';
-import {toCapitalize} from './utils.js';
+import {toCapitalize, getRandomBetween} from './utils.js';
 
 export default class Route extends AbstractComponent {
   constructor(events) {
@@ -9,14 +9,14 @@ export default class Route extends AbstractComponent {
   }
 
   _getRoute() {
-    let places = Array.from(new Set(this._events.map((event) => event.place)));
+    let destinations = Array.from(new Set(this._events.map((event) => event.destination)));
 
-    return places.length < this._MAX_PLACES_TO_SHOW ? places.map(toCapitalize).join(` &mdash; `) : `${toCapitalize(places[0])} &mdash; ... &mdash; ${toCapitalize(places[places.length - 1])}`;
+    return destinations.length < this._MAX_PLACES_TO_SHOW ? destinations.map(toCapitalize).join(` &mdash; `) : `${toCapitalize(destinations[0])} &mdash; ... &mdash; ${toCapitalize(destinations[destinations.length - 1])}`;
   }
 
   _getPeriod() {
-    const firstEventStartSeconds = Math.min.apply(null, this._events.map((event) => event.timeStart));
-    const lastEventEndSeconds = Math.max.apply(null, this._events.map((event) => event.timeStart + event.duration));
+    const firstEventStartSeconds = Math.min.apply(null, this._events.map((event) => new Date(event.dateFrom).getTime()));
+    const lastEventEndSeconds = Math.max.apply(null, this._events.map((event) => new Date(event.dateFrom).getTime() + getRandomBetween(7, 14) * 24 * 60 * 60 * 1000));
     const firstEventMonth = new Date(firstEventStartSeconds).toDateString().split(/ /).slice(1, 3)[0];
     const firstEventDate = new Date(firstEventStartSeconds).toDateString().split(/ /).slice(1, 3)[1];
     const lastEventMonth = new Date(lastEventEndSeconds).toDateString().split(/ /).slice(1, 3)[0];

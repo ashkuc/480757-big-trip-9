@@ -9,7 +9,7 @@ export const shuffleArray = (array) => {
 
 export const toTimeForEdit = (miliseconds) => {
   const dateTime = new Date(miliseconds).toLocaleString();
-  let date = dateTime.split(/\.|,/).slice(0, 3).map((element) => element.slice(0, 2)).join(`/`);
+  let date = dateTime.split(/\.|,/).slice(0, 3).map((element) => element.length === 4 ? element.slice(2, 4) : element).join(`/`);
   let time = dateTime.split(/\.| |,|:/).slice(4, 6).join(`:`);
   return `${date} ${time}`;
 };
@@ -53,4 +53,11 @@ export const unrender = (element) => {
   if (element) {
     element.remove();
   }
+};
+
+// Это временная функция, пока я не подключу moment.js ///
+export const timeFromEditToMilliseconds = (timeFromEdit) => {
+  let timeArray = timeFromEdit.split(`/`);
+  [timeArray[0], timeArray[1]] = [timeArray[1], timeArray[0]];
+  return timeArray.join(`/`);
 };

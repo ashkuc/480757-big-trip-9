@@ -1,4 +1,4 @@
-export const EventTypes = [
+export const Types = [
   {
     NAME: `taxi`,
     PRETEXT: `to`,
@@ -42,8 +42,8 @@ export const EventTypes = [
     IS_MOVEMENT: true,
   },
   {
-    NAME: `check-in`,
-    PRETEXT: ``,
+    NAME: `check`,
+    PRETEXT: `in`,
     ICON: `check-in.png`,
     IS_MOVEMENT: false,
   },

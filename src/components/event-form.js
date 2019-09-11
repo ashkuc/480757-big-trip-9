@@ -1,22 +1,34 @@
 import AbstractComponent from './abstract-component.js';
-import {toCapitalize, toTimeForEdit} from './utils.js';
-import {EventTypes} from '../event-types.js';
-import {EventOptions} from '../event-options.js';
-import {EventPlaces} from '../event-places.js';
+import {toCapitalize, toTimeForEdit, getRandomBetween} from './utils.js';
+import {Types} from '../data-info/types.js';
+import {TypePlaces} from '../data-info/type-places.js';
+import {Offers} from '../data-info/offers.js';
+import {DesinationsSample as Destinations} from '../data-info/destinations-sample.js';
 
 export default class EventForm extends AbstractComponent {
-  constructor({type, place, timeStart, duration, price, options, description, photos}, index) {
+  constructor({basePrice, dateFrom, destination, isFavorite, offers, type}, index) {
     super();
-    this._index = index;
     this._type = type;
-    this._place = place;
-    this._timeStart = timeStart;
-    this._duration = duration;
-    this._timeEnd = this._timeStart + this._duration;
-    this._price = price;
-    this._options = options;
-    this._description = description;
-    this._photos = photos;
+    this._basePrice = basePrice;
+    this._dateFrom = new Date(dateFrom).getTime();
+    this._dateTo = this._dateFrom + getRandomBetween(6, 24) * 10 * 60 * 1000;
+    this._destination = destination;
+    this._isFavorite = isFavorite;
+    this._possibleOffers = Offers[Offers.findIndex((offer) => offer.type === this._type)].offers;
+    this._offers = offers;
+    this._description = this._getValue(`description`);
+    this._pictures = this._getValue(`pictures`);
+    this._index = index;
+  }
+
+  _getValue(propertyName) {
+    let value = null;
+    try {
+      value = Destinations[Destinations.findIndex((destination) => destination.name.toLowerCase() === this._destination.toLowerCase())][propertyName];
+    } catch (error) {
+      return value;
+    }
+    return value;
   }
 
   getTemplate() {
@@ -26,7 +38,7 @@ export default class EventForm extends AbstractComponent {
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-${this._index}">
               <span class="visually-hidden">Choose event type</span>
-              <img class="event__type-icon" width="17" height="17" src="img/icons/${EventTypes.find((item) => item.NAME === this._type).ICON}" alt="Event type icon">
+              <img class="event__type-icon" width="17" height="17" src="img/icons/${Types.find((item) => item.NAME === this._type.toLowerCase()).ICON}" alt="Event type icon">
             </label>
             <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${this._index}" type="checkbox">
 
@@ -34,9 +46,9 @@ export default class EventForm extends AbstractComponent {
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Transfer</legend>
 
-                ${EventTypes.map((type) => type.IS_MOVEMENT ? `<div class="event__type-item">
+                ${Types.map((type) => type.IS_MOVEMENT ? `<div class="event__type-item">
                   <input id="event-type-${type.NAME}-${this._index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.NAME}"${type.NAME === this._type ? ` checked` : ``}>
-                  <label class="event__type-label  event__type-label--${type.NAME}" for="event-type-${type.NAME}-${this._index}">${toCapitalize(type.NAME)}</label>
+                  <label class="event__type-label event__type-label--${type.NAME}" for="event-type-${type.NAME}-${this._index}">${toCapitalize(type.NAME)}</label>
                 </div>`.trim() : ``).join(``)}
 
               </fieldset>
@@ -44,9 +56,9 @@ export default class EventForm extends AbstractComponent {
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Activity</legend>
 
-                ${EventTypes.map((type) => !type.IS_MOVEMENT ? `<div class="event__type-item">
+                ${Types.map((type) => !type.IS_MOVEMENT ? `<div class="event__type-item">
                   <input id="event-type-${type.NAME}-${this._index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.NAME}"${type.NAME === this._type ? ` checked` : ``}>
-                  <label class="event__type-label  event__type-label--${type.NAME}" for="event-type-${type.NAME}-${this._index}">${toCapitalize(type.NAME)}</label>
+                  <label class="event__type-label  event__type-label--${type.NAME === `check` ? `check-in` : type.NAME}" for="event-type-${type.NAME}-${this._index}">${toCapitalize(type.NAME)}</label>
                 </div>`.trim() : ``).join(``)}
 
               </fieldset>
@@ -55,11 +67,11 @@ export default class EventForm extends AbstractComponent {
 
           <div class="event__field-group  event__field-group--destination">
             <label class="event__label  event__type-output" for="event-destination-${this._index}">
-              ${toCapitalize(this._type)} ${EventTypes.find((item) => item.NAME === this._type).PRETEXT}
+              ${toCapitalize(this._type)} ${Types.find((item) => item.NAME === this._type).PRETEXT}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-${this._index}" type="text" name="event-destination" value="${toCapitalize(this._place)}" list="destination-list-${this._index}">
+            <input class="event__input  event__input--destination" id="event-destination-${this._index}" type="text" name="event-destination" value="${toCapitalize(this._destination)}" list="destination-list-${this._index}">
             <datalist id="destination-list-${this._index}">
-              ${EventPlaces.map((place) => `<option value="${place.split(` `).map((word) => toCapitalize(word)).join(` `)}"></option>`.trim()).join(``)}
+              ${TypePlaces[this._type.toUpperCase()].map((place) => `<option value="${place.split(` `).map((word) => toCapitalize(word)).join(` `)}"></option>`.trim()).join(``)}
             </datalist>
           </div>
 
@@ -67,12 +79,12 @@ export default class EventForm extends AbstractComponent {
             <label class="visually-hidden" for="event-start-time-${this._index}">
               From
             </label>
-            <input class="event__input  event__input--time" id="event-start-time-${this._index}" type="text" name="event-start-time" value="${toTimeForEdit(this._timeStart)}">
+            <input class="event__input  event__input--time" id="event-start-time-${this._index}" type="text" name="event-start-time" value="${toTimeForEdit(this._dateFrom)}">
             &mdash;
             <label class="visually-hidden" for="event-end-time-${this._index}">
               To
             </label>
-            <input class="event__input  event__input--time" id="event-end-time-${this._index}" type="text" name="event-end-time" value="${toTimeForEdit(this._timeStart + this._duration)}">
+            <input class="event__input  event__input--time" id="event-end-time-${this._index}" type="text" name="event-end-time" value="${toTimeForEdit(this._dateTo)}">
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -80,13 +92,13 @@ export default class EventForm extends AbstractComponent {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-${this._index}" type="text" name="event-price" value="${this._price}">
+            <input class="event__input  event__input--price" id="event-price-${this._index}" type="text" name="event-price" value="${this._basePrice}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
           <button class="event__reset-btn" type="reset">Delete</button>
 
-          <input id="event-favorite-${this._index}" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" checked>
+          <input id="event-favorite-${this._index}" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${this._isFavorite ? `checked` : ``}>
           <label class="event__favorite-btn" for="event-favorite-${this._index}">
             <span class="visually-hidden">Add to favorite</span>
             <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -102,31 +114,29 @@ export default class EventForm extends AbstractComponent {
         <section class="event__details">
 
           <section class="event__section  event__section--offers">
-            <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
+            <h3 class="event__section-title event__section-title--offers">Offers</h3>
             <div class="event__available-offers">
-
-              ${EventOptions.map((option) => `<div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-${option.NAME.split(/ /).slice(-1)}-${this._index}" type="checkbox" name="event-offer-${option.NAME.split(/ /).slice(-1)}" ${this._options.includes(option.NAME) ? `checked` : ``}>
-                <label class="event__offer-label" for="event-offer-${option.NAME.split(/ /).slice(-1)}-${this._index}">
-                  <span class="event__offer-title">${toCapitalize(option.NAME)}</span>
+              ${this._possibleOffers.map((offer) => `<div class="event__offer-selector">
+                <input class="event__offer-checkbox visually-hidden" id="event-offer-${offer.name.replace(/ /g, `-`)}-${this._index}" type="checkbox" name="event-offer-${offer.name.replace(/ /g, `-`)}" ${this._offers.some((offerName) => offerName === offer.name) ? `checked` : ``} data-offer-name="${offer.name.replace(/ /g, `-`)}">
+                <label class="event__offer-label" for="event-offer-${offer.name.replace(/ /g, `-`)}-${this._index}">
+                  <span class="event__offer-title">${toCapitalize(offer.name)}</span>
                   &plus;
-                  &euro;&nbsp;<span class="event__offer-price">${option.COST}</span>
+                  &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
                 </label>
               </div>`.trim()).join(``)}
             </div>
           </section>
 
-          <section class="event__section  event__section--destination">
-            <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+          ${this._description ? `<section class="event__section event__section--destination">
+            <h3 class="event__section-title event__section-title--destination">Destination</h3>
             <p class="event__destination-description">${this._description}</p>
 
-            <div class="event__photos-container">
+            ${this._pictures ? `<div class="event__photos-container">
               <div class="event__photos-tape">
-                ${this._photos.map((photo) => `<img class="event__photo" src="${photo}" alt="Event photo">`.trim()).join(``)}
+                ${this._pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`.trim()).join(``)}
               </div>
-            </div>
-          </section>
+            </div>` : ``}
+          </section>` : ``}
         </section>
       </form>
     </li>`.trim();
