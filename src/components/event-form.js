@@ -6,15 +6,15 @@ import {Offers} from '../data-info/offers.js';
 import {DesinationsSample as Destinations} from '../data-info/destinations-sample.js';
 
 export default class EventForm extends AbstractComponent {
-  constructor({base_price, date_from, date_to, destination, is_favorite, offers, type}, index) {
+  constructor({basePrice, dateFrom, destination, isFavorite, offers, type}, index) {
     super();
     this._type = type;
-    this._base_price = base_price;
-    this._date_from = new Date(date_from).getTime();
-    this._date_to = this._date_from + getRandomBetween(6, 24) * 10 * 60 * 1000;
+    this._basePrice = basePrice;
+    this._dateFrom = new Date(dateFrom).getTime();
+    this._dateTo = this._dateFrom + getRandomBetween(6, 24) * 10 * 60 * 1000;
     this._destination = destination;
-    this._is_favorite = is_favorite;
-    this._possible_offers = Offers[Offers.findIndex((offer) => offer.type === this._type)].offers;
+    this._isFavorite = isFavorite;
+    this._possibleOffers = Offers[Offers.findIndex((offer) => offer.type === this._type)].offers;
     this._offers = offers;
     this._description = this._getValue(`description`);
     this._pictures = this._getValue(`pictures`);
@@ -25,9 +25,11 @@ export default class EventForm extends AbstractComponent {
     let value = null;
     try {
       value = Destinations[Destinations.findIndex((destination) => destination.name.toLowerCase() === this._destination.toLowerCase())][propertyName];
-    } catch (err) {};
+    } catch (error) {
+      return value;
+    }
     return value;
-  };
+  }
 
   getTemplate() {
     return `<li class="trip-events__item">
@@ -77,12 +79,12 @@ export default class EventForm extends AbstractComponent {
             <label class="visually-hidden" for="event-start-time-${this._index}">
               From
             </label>
-            <input class="event__input  event__input--time" id="event-start-time-${this._index}" type="text" name="event-start-time" value="${toTimeForEdit(this._date_from)}">
+            <input class="event__input  event__input--time" id="event-start-time-${this._index}" type="text" name="event-start-time" value="${toTimeForEdit(this._dateFrom)}">
             &mdash;
             <label class="visually-hidden" for="event-end-time-${this._index}">
               To
             </label>
-            <input class="event__input  event__input--time" id="event-end-time-${this._index}" type="text" name="event-end-time" value="${toTimeForEdit(this._date_to)}">
+            <input class="event__input  event__input--time" id="event-end-time-${this._index}" type="text" name="event-end-time" value="${toTimeForEdit(this._dateTo)}">
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -90,13 +92,13 @@ export default class EventForm extends AbstractComponent {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-${this._index}" type="text" name="event-price" value="${this._base_price}">
+            <input class="event__input  event__input--price" id="event-price-${this._index}" type="text" name="event-price" value="${this._basePrice}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
           <button class="event__reset-btn" type="reset">Delete</button>
 
-          <input id="event-favorite-${this._index}" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${this._is_favorite ? `checked` : ``}>
+          <input id="event-favorite-${this._index}" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${this._isFavorite ? `checked` : ``}>
           <label class="event__favorite-btn" for="event-favorite-${this._index}">
             <span class="visually-hidden">Add to favorite</span>
             <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -114,7 +116,7 @@ export default class EventForm extends AbstractComponent {
           <section class="event__section  event__section--offers">
             <h3 class="event__section-title event__section-title--offers">Offers</h3>
             <div class="event__available-offers">
-              ${this._possible_offers.map((offer) => `<div class="event__offer-selector">
+              ${this._possibleOffers.map((offer) => `<div class="event__offer-selector">
                 <input class="event__offer-checkbox visually-hidden" id="event-offer-${offer.name.replace(/ /g, `-`)}-${this._index}" type="checkbox" name="event-offer-${offer.name.replace(/ /g, `-`)}" ${this._offers.some((offerName) => offerName === offer.name) ? `checked` : ``} data-offer-name="${offer.name.replace(/ /g, `-`)}">
                 <label class="event__offer-label" for="event-offer-${offer.name.replace(/ /g, `-`)}-${this._index}">
                   <span class="event__offer-title">${toCapitalize(offer.name)}</span>

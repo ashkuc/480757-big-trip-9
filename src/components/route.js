@@ -15,8 +15,8 @@ export default class Route extends AbstractComponent {
   }
 
   _getPeriod() {
-    const firstEventStartSeconds = Math.min.apply(null, this._events.map((event) => new Date(event.date_from).getTime()));
-    const lastEventEndSeconds = Math.max.apply(null, this._events.map((event) => new Date(event.date_from).getTime() + getRandomBetween(7, 14) * 24 * 60 * 60 * 1000));
+    const firstEventStartSeconds = Math.min.apply(null, this._events.map((event) => new Date(event.dateFrom).getTime()));
+    const lastEventEndSeconds = Math.max.apply(null, this._events.map((event) => new Date(event.dateFrom).getTime() + getRandomBetween(7, 14) * 24 * 60 * 60 * 1000));
     const firstEventMonth = new Date(firstEventStartSeconds).toDateString().split(/ /).slice(1, 3)[0];
     const firstEventDate = new Date(firstEventStartSeconds).toDateString().split(/ /).slice(1, 3)[1];
     const lastEventMonth = new Date(lastEventEndSeconds).toDateString().split(/ /).slice(1, 3)[0];

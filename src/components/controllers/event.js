@@ -29,6 +29,7 @@ export default class EventController {
 
     this._event.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, (evt) => {
       evt.preventDefault();
+      this._onChangeView();
       this._container.getElement().replaceChild(this._eventForm.getElement(), this._event.getElement());
       document.addEventListener(`keydown`, onEscKeyDown);
     });
@@ -68,11 +69,11 @@ export default class EventController {
       const formData = new FormData(evt.target);
 
       const entry = {
-        base_price: formData.get(`event-price`),
-        date_from: new Date(timeFromEditToMilliseconds(formData.get(`event-start-time`))).getTime(),
-        date_to: new Date(timeFromEditToMilliseconds(formData.get(`event-end-time`))).getTime(),
+        basePrice: formData.get(`event-price`),
+        dateFrom: new Date(timeFromEditToMilliseconds(formData.get(`event-start-time`))).getTime(),
+        dateTo: new Date(timeFromEditToMilliseconds(formData.get(`event-end-time`))).getTime(),
         destination: formData.get(`event-destination`),
-        is_favorite: formData.get(`event-favorite`) === `on` ? true : false,
+        isFavorite: formData.get(`event-favorite`) === `on` ? true : false,
         offers: Array.from(this._eventForm.getElement().querySelectorAll(`.event__offer-checkbox:checked`)).map((input) => input.getAttribute(`data-offer-name`).split(`-`).join(` `)),
         type: formData.get(`event-type`),
       };
@@ -92,7 +93,7 @@ export default class EventController {
     const newHtmlString = places.map((place) => `<option value="${place.split(` `).map((word) => toCapitalize(word)).join(` `)}"></option>`.trim()).join(``);
     datalist.innerHTML = ``;
     datalist.insertAdjacentHTML(Position.BEFOREEND, newHtmlString);
-  };
+  }
 
   _updateType(typeName) {
     let iconLink = this._eventForm.getElement().querySelector(`.event__type-icon`).src;
@@ -102,7 +103,7 @@ export default class EventController {
       typeName = `check-in`;
     }
     this._eventForm.getElement().querySelector(`.event__type-icon`).src = iconLink.replace(currentType, typeName);
-  };
+  }
 
   _reRenderOffers(typeName) {
     unrender(this._eventForm.getElement().querySelector(`.event__section`));
@@ -122,15 +123,15 @@ export default class EventController {
           </div>`.trim()).join(``)}
         </div>
       </section>`.trim();
-  
+
       this._eventForm.getElement().querySelector(`.event__details`).insertAdjacentHTML(Position.AFTERBEGIN, newHtmlOffers);
     }
-  };
+  }
 
   _reRenderDescription(destination) {
     unrender(this._eventForm.getElement().querySelector(`.event__section--destination`));
     const descriptionData = Destinations.find((item) => item.name.toLowerCase() === destination.toLowerCase());
-    if (Boolean(descriptionData)) {
+    if (descriptionData) {
       const newHtmlDescription = `<section class="event__section event__section--destination">
         <h3 class="event__section-title event__section-title--destination">Destination</h3>
         <p class="event__destination-description">${descriptionData.description}</p>
@@ -144,5 +145,11 @@ export default class EventController {
 
       this._eventForm.getElement().querySelector(`.event__details`).insertAdjacentHTML(Position.BEFOREEND, newHtmlDescription);
     }
-  };
+  }
+
+  setDefaultView() {
+    if (this._container.getElement().contains(this._eventForm.getElement())) {
+      this._container.getElement().replaceChild(this._event.getElement(), this._eventForm.getElement());
+    }
+  }
 }

@@ -22,6 +22,8 @@ export default class {
     this._tripTotalCost = document.querySelector(`.trip-info__cost-value`);
     this._currentSortType = `event`;
 
+    this._subscriptions = [];
+    this._onChangeView = this._onChangeView.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
   }
 
@@ -52,18 +54,19 @@ export default class {
         this._sortContainer.getElement().querySelector(`.trip-sort__item--day`).textContent = `day`;
         break;
       case `time`:
-        this._eventsForRender = this._events.slice().sort((a, b) => new Date(a.date_from).getTime() - new Date(b.date_from).getTime());
+        this._eventsForRender = this._events.slice().sort((a, b) => new Date(a.dateFrom).getTime() - new Date(b.dateFrom).getTime());
         this._sortContainer.getElement().querySelector(`.trip-sort__item--day`).textContent = ``;
         break;
       case `price`:
-        this._eventsForRender = this._events.slice().sort((a, b) => a.base_price - b.base_price);
+        this._eventsForRender = this._events.slice().sort((a, b) => a.basePrice - b.basePrice);
         this._sortContainer.getElement().querySelector(`.trip-sort__item--day`).textContent = ``;
         break;
     }
   }
 
   _renderEvent(eventsList, eventInfo, index) {
-    new EventController(eventsList, eventInfo, index, this._onDataChange);
+    const eventController = new EventController(eventsList, eventInfo, index, this._onDataChange, this._onChangeView);
+    this._subscriptions.push(eventController.setDefaultView.bind(eventController));
   }
 
   _renderEvents(day, eventsList, eventsInfo) {
@@ -74,7 +77,7 @@ export default class {
   _renderDay(dayDate, currentDayNumber) {
     const day = new Day(dayDate, currentDayNumber);
     const eventsList = new EventsList();
-    const eventsForRender = this._eventsForRender.filter((event) => Math.floor(new Date(event.date_from).getTime() / 1000 / 60 / 60 / 24) === dayDate);
+    const eventsForRender = this._eventsForRender.filter((event) => Math.floor(new Date(event.dateFrom).getTime() / 1000 / 60 / 60 / 24) === dayDate);
 
     this._renderEvents(day, eventsList, eventsForRender);
 
@@ -82,7 +85,7 @@ export default class {
   }
 
   _renderDaysList() {
-    const eventDays = Array.from(new Set(this._events.slice().sort((a, b) => new Date(a.date_from).getTime() - new Date(b.date_from).getTime()).map((event) => Math.floor(new Date(event.date_from).getTime() / 1000 / 60 / 60 / 24))));
+    const eventDays = Array.from(new Set(this._events.slice().sort((a, b) => new Date(a.dateFrom).getTime() - new Date(b.dateFrom).getTime()).map((event) => Math.floor(new Date(event.dateFrom).getTime() / 1000 / 60 / 60 / 24))));
     let currentDayNumber = 1;
 
     eventDays.forEach((dayDate, index, days) => {
@@ -122,12 +125,16 @@ export default class {
     this._updateTotalSum();
   }
 
+  _onChangeView() {
+    this._subscriptions.forEach((subscription) => subscription());
+  }
+
   _updateTotalSum() {
     if (this._events.length > 0) {
-      this._totalSum = this._events.map((event) => Number(event.base_price)).reduce((a, b) => a + b);
+      this._totalSum = this._events.map((event) => Number(event.basePrice)).reduce((a, b) => a + b);
       this._tripTotalCost.textContent = this._totalSum;
     }
-  };
+  }
 
   _renderMainContent() {
     if (this._events.length === 0) {

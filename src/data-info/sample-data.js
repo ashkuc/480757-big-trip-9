@@ -2,9 +2,9 @@ import {shuffleArray, getRandomBetween, getRandomFromArray, getRandomBoolean} fr
 
 export const getEvent = () => {
   return {
-    base_price: getRandomBetween(4, 18) * 100,
-    date_from: new Date(Date.now() + getRandomBetween(1, 7) * 24 * 60 * 60 * 1000).toISOString(),
-    date_to: new Date(Date.now()).toISOString(),
+    basePrice: getRandomBetween(4, 18) * 100,
+    dateFrom: new Date(Date.now() + getRandomBetween(1, 7) * 24 * 60 * 60 * 1000).toISOString(),
+    dateTo: new Date(Date.now()).toISOString(),
     destination: getRandomFromArray([
       `Chamonix`,
       `Pitsburg`,
@@ -15,7 +15,7 @@ export const getEvent = () => {
       `Argentina`,
       `Iceland`,
     ]),
-    is_favorite: getRandomBoolean(),
+    isFavorite: getRandomBoolean(),
     offers: shuffleArray([
       `add luggage`,
       `order uber`,
