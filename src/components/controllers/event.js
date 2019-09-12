@@ -1,7 +1,6 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import 'flatpickr/dist/themes/material_blue.css';
-import moment, { parseTwoDigitYear } from 'moment';
 import {Position, render, unrender, toCapitalize} from '../utils.js';
 import {TypePlaces} from '../../data-info/type-places.js';
 import {Offers} from '../../data-info/offers.js';
@@ -25,30 +24,30 @@ export default class EventController {
 
   init() {
     flatpickr(this._eventForm.getElement().querySelector(`.event__input--time[name="event-start-time"]`), {
-      defaultDate: this._data.dateFrom,
-      minDate: Date.now(),
-      enableTime: true,
-      dateFormat: `u`,
-      allowInput: true,
-      time_24hr: true,
-      altInput: true,
-      altFormat: `d/m/y H:i`,
+      'defaultDate': this._data.dateFrom,
+      'minDate': Date.now(),
+      'enableTime': true,
+      'dateFormat': `u`,
+      'allowInput': true,
+      'time_24hr': true,
+      'altInput': true,
+      'altFormat': `d/m/y H:i`,
       onChange(selectedDates) {
         dateEnd.config.minDate = new Date(selectedDates);
       }
     });
 
     const dateEnd = flatpickr(this._eventForm.getElement().querySelector(`.event__input--time[name="event-end-time"]`), {
-      defaultDate: this._data.dateTo,
-      minDate: this._data.dateFrom,
-      enableTime: true,
-      dateFormat: `u`,
-      allowInput: true,
-      time_24hr: true,
-      altInput: true,
-      altFormat: `d/m/y H:i`,
+      'defaultDate': this._data.dateTo,
+      'minDate': this._data.dateFrom,
+      'enableTime': true,
+      'dateFormat': `u`,
+      'allowInput': true,
+      'time_24hr': true,
+      'altInput': true,
+      'altFormat': `d/m/y H:i`,
     });
-    
+
     const onEscKeyDown = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
         this._container.getElement().replaceChild(this._event.getElement(), this._eventForm.getElement());

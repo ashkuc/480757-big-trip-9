@@ -1,6 +1,5 @@
-import moment from 'moment';
 import AbstractComponent from './abstract-component.js';
-import {toCapitalize, toTimeForEdit} from './utils.js';
+import {toCapitalize} from './utils.js';
 import {Types} from '../data-info/types.js';
 import {TypePlaces} from '../data-info/type-places.js';
 import {Offers} from '../data-info/offers.js';
