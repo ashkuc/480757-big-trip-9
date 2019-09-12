@@ -15,22 +15,16 @@ export default class EventForm extends AbstractComponent {
     this._dateTo = dateTo;
     this._duration = this._dateTo - this._dateFrom;
     this._destination = destination;
+    this._destinationInfo = this._getDestinationInfo();
     this._isFavorite = isFavorite;
     this._possibleOffers = Offers[Offers.findIndex((offer) => offer.type === this._type)].offers;
     this._offers = offers;
-    this._description = this._getValue(`description`);
-    this._pictures = this._getValue(`pictures`);
     this._index = index;
   }
 
-  _getValue(propertyName) {
-    let value = null;
-    try {
-      value = Destinations[Destinations.findIndex((destination) => destination.name.toLowerCase() === this._destination.toLowerCase())][propertyName];
-    } catch (error) {
-      return value;
-    }
-    return value;
+  _getDestinationInfo() {
+    this._destinationInfo = Destinations.find((destination) => destination.name.toLowerCase() === this._destination.toLowerCase());
+    return this._destinationInfo ? this._destinationInfo : null;
   }
 
   getTemplate() {
@@ -129,13 +123,13 @@ export default class EventForm extends AbstractComponent {
             </div>
           </section>
 
-          ${this._description ? `<section class="event__section event__section--destination">
+          ${this._destinationInfo ? `<section class="event__section event__section--destination">
             <h3 class="event__section-title event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${this._description}</p>
+            <p class="event__destination-description">${this._destinationInfo.description}</p>
 
-            ${this._pictures ? `<div class="event__photos-container">
+            ${this._destinationInfo ? `<div class="event__photos-container">
               <div class="event__photos-tape">
-                ${this._pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`.trim()).join(``)}
+                ${this._destinationInfo.pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`.trim()).join(``)}
               </div>
             </div>` : ``}
           </section>` : ``}

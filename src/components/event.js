@@ -11,7 +11,7 @@ export default class Event extends AbstractComponent {
     this._basePrice = basePrice;
     this._dateFrom = dateFrom;
     this._dateTo = dateTo;
-    this._duration = this._dateTo - this._dateFrom;
+    this._duration = moment.duration(moment(this._dateTo).diff(moment(this._dateFrom)));
     this._destination = destination;
     this._isFavorite = isFavorite;
     this._possibleOffers = Offers[Offers.findIndex((offer) => offer.type === this._type)].offers;
@@ -20,7 +20,6 @@ export default class Event extends AbstractComponent {
   }
 
   getTemplate() {
-    console.log(moment.duration(moment(this._dateTo).diff(moment(this._dateFrom))));
     return `<li class="trip-events__item">
       <div class="event">
         <div class="event__type">
@@ -34,7 +33,7 @@ export default class Event extends AbstractComponent {
             &mdash;
             <time class="event__end-time" datetime="${new Date(this._dateTo).toLocaleString()}">${moment(this._dateTo).format(`HH:mm`)}</time>
           </p>
-          <p class="event__duration">${Math.floor(moment.duration(this._duration).asDays()) ? `${Math.floor(moment.duration(this._duration).asDays())}D ` : ``}${moment.duration(this._duration).asHours() % 24}H ${moment.duration(this._duration).asMinutes() % 60}M</p>
+          <p class="event__duration">${this._duration.get(`days`) ? `${this._duration.get(`days`)}D ` : ``}${this._duration.get(`hours`)}H ${this._duration.get(`minutes`)}M</p>
         </div>
 
         <p class="event__price">
