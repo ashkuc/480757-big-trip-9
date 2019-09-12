@@ -1,34 +1,29 @@
 import AbstractComponent from './abstract-component.js';
-import {toCapitalize, toTimeForEdit, getRandomBetween} from './utils.js';
+import {toCapitalize} from './utils.js';
 import {Types} from '../data-info/types.js';
 import {TypePlaces} from '../data-info/type-places.js';
 import {Offers} from '../data-info/offers.js';
 import {DesinationsSample as Destinations} from '../data-info/destinations-sample.js';
 
 export default class EventForm extends AbstractComponent {
-  constructor({basePrice, dateFrom, destination, isFavorite, offers, type}, index) {
+  constructor({basePrice, dateFrom, dateTo, destination, isFavorite, offers, type}, index) {
     super();
     this._type = type;
     this._basePrice = basePrice;
-    this._dateFrom = new Date(dateFrom).getTime();
-    this._dateTo = this._dateFrom + getRandomBetween(6, 24) * 10 * 60 * 1000;
+    this._dateFrom = dateFrom;
+    this._dateTo = dateTo;
+    this._duration = this._dateTo - this._dateFrom;
     this._destination = destination;
+    this._destinationInfo = this._getDestinationInfo();
     this._isFavorite = isFavorite;
     this._possibleOffers = Offers[Offers.findIndex((offer) => offer.type === this._type)].offers;
     this._offers = offers;
-    this._description = this._getValue(`description`);
-    this._pictures = this._getValue(`pictures`);
     this._index = index;
   }
 
-  _getValue(propertyName) {
-    let value = null;
-    try {
-      value = Destinations[Destinations.findIndex((destination) => destination.name.toLowerCase() === this._destination.toLowerCase())][propertyName];
-    } catch (error) {
-      return value;
-    }
-    return value;
+  _getDestinationInfo() {
+    this._destinationInfo = Destinations.find((destination) => destination.name.toLowerCase() === this._destination.toLowerCase());
+    return this._destinationInfo ? this._destinationInfo : null;
   }
 
   getTemplate() {
@@ -79,12 +74,12 @@ export default class EventForm extends AbstractComponent {
             <label class="visually-hidden" for="event-start-time-${this._index}">
               From
             </label>
-            <input class="event__input  event__input--time" id="event-start-time-${this._index}" type="text" name="event-start-time" value="${toTimeForEdit(this._dateFrom)}">
+            <input class="event__input  event__input--time" id="event-start-time-${this._index}" type="text" name="event-start-time" value="">
             &mdash;
             <label class="visually-hidden" for="event-end-time-${this._index}">
               To
             </label>
-            <input class="event__input  event__input--time" id="event-end-time-${this._index}" type="text" name="event-end-time" value="${toTimeForEdit(this._dateTo)}">
+            <input class="event__input  event__input--time" id="event-end-time-${this._index}" type="text" name="event-end-time" value="">
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -127,13 +122,13 @@ export default class EventForm extends AbstractComponent {
             </div>
           </section>
 
-          ${this._description ? `<section class="event__section event__section--destination">
+          ${this._destinationInfo ? `<section class="event__section event__section--destination">
             <h3 class="event__section-title event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${this._description}</p>
+            <p class="event__destination-description">${this._destinationInfo.description}</p>
 
-            ${this._pictures ? `<div class="event__photos-container">
+            ${this._destinationInfo ? `<div class="event__photos-container">
               <div class="event__photos-tape">
-                ${this._pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`.trim()).join(``)}
+                ${this._destinationInfo.pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`.trim()).join(``)}
               </div>
             </div>` : ``}
           </section>` : ``}

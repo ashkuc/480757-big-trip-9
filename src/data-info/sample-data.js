@@ -3,8 +3,8 @@ import {shuffleArray, getRandomBetween, getRandomFromArray, getRandomBoolean} fr
 export const getEvent = () => {
   return {
     basePrice: getRandomBetween(4, 18) * 100,
-    dateFrom: new Date(Date.now() + getRandomBetween(1, 7) * 24 * 60 * 60 * 1000).toISOString(),
-    dateTo: new Date(Date.now()).toISOString(),
+    dateFrom: Date.now() + getRandomBetween(1, 7) * 24 * 60 * 60 * 1000,
+    dateTo: Date.now() + getRandomBetween(7, 14) * 24 * 60 * 60 * 1000,
     destination: getRandomFromArray([
       `Chamonix`,
       `Pitsburg`,
