@@ -8,7 +8,7 @@ import SortItem from '../sort-item.js';
 import NoEvents from '../no-events.js';
 import EventController from './event';
 
-export default class {
+export default class TripController {
   constructor(container, events) {
     this._container = container;
     this._events = events;
@@ -144,6 +144,14 @@ export default class {
       this._renderDaysList();
       this._updateTotalSum();
     }
+  }
+
+  hide() {
+    this._container.classList.add(`visually-hidden`);
+  }
+
+  show() {
+    this._container.classList.remove(`visually-hidden`);
   }
 
   init() {
