@@ -20,10 +20,11 @@ export default class EventController {
     this._onChangeView = onChangeView;
 
     this.init();
+    console.log(this._data);
   }
 
   init() {
-    flatpickr(this._eventForm.getElement().querySelector(`.event__input--time[name="event-start-time"]`), {
+    const dateStart = flatpickr(this._eventForm.getElement().querySelector(`.event__input--time[name="event-start-time"]`), {
       'defaultDate': this._data.dateFrom,
       'minDate': Date.now(),
       'enableTime': true,
@@ -51,6 +52,7 @@ export default class EventController {
     const onEscKeyDown = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
         this._container.getElement().replaceChild(this._event.getElement(), this._eventForm.getElement());
+        this._resetTask(this._data, dateStart, dateEnd);
         document.removeEventListener(`keydown`, onEscKeyDown);
       }
     };
@@ -173,6 +175,19 @@ export default class EventController {
 
       this._eventForm.getElement().querySelector(`.event__details`).insertAdjacentHTML(Position.BEFOREEND, newHtmlDescription);
     }
+  }
+
+  _resetTask(data, dateStart, dateEnd) {
+    this._reRenderDatalist(data.type);
+    this._updateType(data.type);
+    this._reRenderOffers(data.type);
+    this._reRenderDescription(data.destination);
+    this._eventForm.getElement().querySelector(`.event__input--destination`).value = data.destination;
+    this._eventForm.getElement().querySelector(`.event__input--price`).value = data.basePrice;
+    this._eventForm.getElement().querySelector(`.event__favorite-checkbox`).checked = data.isFavorite ? true : false;
+    data.offers.forEach((offerName) => this._eventForm.getElement().querySelector(`.event__offer-checkbox[data-offer-name="${offerName.replace(/ /g, `-`)}"]`).checked = true);
+    dateStart.setDate(this._data.dateFrom);
+    dateEnd.setDate(this._data.dateTo);
   }
 
   setDefaultView() {
