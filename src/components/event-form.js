@@ -106,9 +106,9 @@ export default class EventForm extends AbstractComponent {
           </button>
         </header>
 
-        <section class="event__details">
+        ${this._possibleOffers.length > 0 || this._destinationInfo ? `<section class="event__details">
 
-          <section class="event__section  event__section--offers">
+          ${this._possibleOffers.length > 0 ? `<section class="event__section  event__section--offers">
             <h3 class="event__section-title event__section-title--offers">Offers</h3>
             <div class="event__available-offers">
               ${this._possibleOffers.map((offer) => `<div class="event__offer-selector">
@@ -120,7 +120,7 @@ export default class EventForm extends AbstractComponent {
                 </label>
               </div>`.trim()).join(``)}
             </div>
-          </section>
+          </section>`.trim() : ``}
 
           ${this._destinationInfo ? `<section class="event__section event__section--destination">
             <h3 class="event__section-title event__section-title--destination">Destination</h3>
@@ -132,7 +132,7 @@ export default class EventForm extends AbstractComponent {
               </div>
             </div>` : ``}
           </section>` : ``}
-        </section>
+        </section>`.trim() : ``}
       </form>
     </li>`.trim();
   }

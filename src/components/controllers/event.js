@@ -134,7 +134,7 @@ export default class EventController {
   }
 
   _reRenderOffers(typeName) {
-    unrender(this._eventForm.getElement().querySelector(`.event__section`));
+    unrender(this._eventForm.getElement().querySelector(`.event__section--offers`));
     const offers = Offers.find((item) => item.type === typeName).offers;
 
     if (offers.length > 0) {
