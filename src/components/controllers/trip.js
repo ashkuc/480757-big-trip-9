@@ -7,6 +7,7 @@ import SortContainer from '../sort-container.js';
 import SortItem from '../sort-item.js';
 import NoEvents from '../no-events.js';
 import EventController from './event';
+import {Mode as EventControllerMode} from './event';
 
 export default class TripController {
   constructor(container, events) {
@@ -153,6 +154,23 @@ export default class TripController {
   show() {
     this._container.classList.remove(`visually-hidden`);
   }
+
+  createNewEvent() {
+    const newEventIndex = this._events.length + 1;
+
+    const emptyEvent = {
+      basePrice: null,
+      dateFrom: null,
+      dateTo: null,
+      destination: null,
+      isFavorite: null,
+      offers: null,
+      type: `flight`,
+    };
+
+    const eventController = new EventController(this._daysList, emptyEvent, newEventIndex, this._onDataChange, this._onChangeView, EventControllerMode.ADDING);
+    this._subscriptions.push(eventController.setDefaultView.bind(eventController));
+  };
 
   init() {
     this._renderMainContent();

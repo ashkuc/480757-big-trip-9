@@ -13,6 +13,7 @@ const EVENTS_NUMBER = 4;
 const tripInfoContainer = document.querySelector(`.trip-info`);
 const tripControlsHeadings = document.querySelectorAll(`.trip-controls h2`);
 const tripEventsContainer = document.querySelector(`.trip-events`);
+const newEventButton = document.querySelector(`.trip-main__event-add-btn`);
 
 const eventMocks = new Array(EVENTS_NUMBER).fill(``).map(getEvent);
 const menuItems = getMenuItems();
@@ -65,6 +66,11 @@ const renderFilter = () => {
   render(tripControlsHeadings[1], filterContainer.getElement(), Position.AFTER);
 };
 
+const onNewEventButtonClick = (evt) => {
+  evt.preventDefault();
+  tripController.createNewEvent();
+};
+
 statistic.getElement().classList.add(`visually-hidden`);
 
 render(tripInfoContainer, route.getElement(), Position.AFTERBEGIN);
@@ -72,3 +78,4 @@ renderMenu();
 renderFilter();
 tripController.init();
 render(tripEventsContainer, statistic.getElement(), Position.AFTER);
+newEventButton.addEventListener(`click`, onNewEventButtonClick);

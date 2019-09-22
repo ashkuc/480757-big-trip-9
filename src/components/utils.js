@@ -17,7 +17,7 @@ export const toTimeForEdit = (miliseconds) => {
 export const getRandomBoolean = () => Boolean(Math.round(Math.random()));
 export const getRandomBetween = (min, max) => Math.floor(min + Math.random() * (max + 1 - min));
 export const getRandomFromArray = (array) => array[getRandomBetween(0, array.length - 1)];
-export const toCapitalize = (string) => string.charAt(0).toUpperCase() + string.slice(1);
+export const toCapitalize = (string) => string ? string.charAt(0).toUpperCase() + string.slice(1) : ``;
 
 export const Position = {
   AFTERBEGIN: `afterbegin`,

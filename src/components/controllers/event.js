@@ -9,25 +9,39 @@ import {DesinationsSample as Destinations} from '../../data-info/destinations-sa
 import Event from '../event.js';
 import EventForm from '../event-form.js';
 
+export const Mode = {
+  ADDING: `adding`,
+  DEFAULT: `default`,
+};
+
 export default class EventController {
-  constructor(container, data, index, onDataChange, onChangeView) {
+  constructor(container, data, index, onDataChange, onChangeView, mode = `default`) {
     this._container = container;
     this._data = data;
     this._index = index;
     this._event = new Event(this._data);
-    this._eventForm = new EventForm(this._data, this._index);
+    this._eventForm = new EventForm(this._data, this._index, mode);
     this._onDataChange = onDataChange;
     this._onChangeView = onChangeView;
     this._isHasOffers = Boolean(Offers.find((item) => item.type === this._data.type).offers.length);
-    this._isHasDescription = Boolean(Destinations.find((item) => item.name.toLowerCase() === this._data.destination.toLowerCase()));
+    this._isHasDescription = this._data.destination ? Boolean(Destinations.find((item) => item.name.toLowerCase() === this._data.destination.toLowerCase())) : false;
+    this._mode = mode;
 
-    this.init();
+    this.init(this._mode);
   }
 
-  init() {
+  init(mode) {
+    let renderPosition = Position.BEFOREEND;
+    let currentView = this._event;
+
+    if (mode === Mode.ADDING) {
+      renderPosition = Position.BEFORE;
+      currentView = this._eventForm;
+    }
+
     const dateStart = flatpickr(this._eventForm.getElement().querySelector(`.event__input--time[name="event-start-time"]`), {
-      'defaultDate': this._data.dateFrom,
       'minDate': Date.now(),
+      'defaultDate': this._data.dateFrom ? this._data.dateFrom : Date.now(),
       'enableTime': true,
       'dateFormat': `u`,
       'allowInput': true,
@@ -40,8 +54,8 @@ export default class EventController {
     });
 
     const dateEnd = flatpickr(this._eventForm.getElement().querySelector(`.event__input--time[name="event-end-time"]`), {
-      'defaultDate': this._data.dateTo,
-      'minDate': this._data.dateFrom,
+      'defaultDate': this._data.dateTo ? this._data.dateTo : Date.now(),
+      'minDate': this._data.dateFrom ? this._data.dateFrom : Date.now(),
       'enableTime': true,
       'dateFormat': `u`,
       'allowInput': true,
@@ -65,11 +79,13 @@ export default class EventController {
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
-    this._eventForm.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, (evt) => {
-      evt.preventDefault();
-      this._container.getElement().replaceChild(this._event.getElement(), this._eventForm.getElement());
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    });
+    if (this._eventForm.getElement().querySelector(`.event__rollup-btn`)) {
+      this._eventForm.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+        this._container.getElement().replaceChild(this._event.getElement(), this._eventForm.getElement());
+        document.removeEventListener(`keydown`, onEscKeyDown);
+      });
+    }
 
     this._eventForm.getElement().querySelectorAll(`input[type="text"]`).forEach((input) => {
       input.addEventListener(`focus`, () => {
@@ -95,7 +111,14 @@ export default class EventController {
       this._reRenderDescription(evt.target.value);
     });
 
-    this._eventForm.getElement().querySelector(`form`).addEventListener(`submit`, (evt) => {
+    this._eventForm.getElement().querySelector(`.event__input--destination`).addEventListener(`keydown`, function (evt) {
+      evt.preventDefault();
+      if (evt.key === `Backspace` || evt.key === `Delete`) {
+        this.value = ``;
+      }
+    });
+
+    this._eventForm.getElement().addEventListener(`submit`, (evt) => {
       evt.preventDefault();
       const formData = new FormData(evt.target);
 
@@ -115,7 +138,7 @@ export default class EventController {
       document.removeEventListener(`keydown`, onEscKeyDown);
     });
 
-    render(this._container.getElement(), this._event.getElement(), Position.BEFOREEND);
+    render(this._container.getElement(), currentView.getElement(), renderPosition);
   }
 
   _reRenderDatalist(typeName) {
