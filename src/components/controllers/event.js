@@ -18,9 +18,10 @@ export default class EventController {
     this._eventForm = new EventForm(this._data, this._index);
     this._onDataChange = onDataChange;
     this._onChangeView = onChangeView;
+    this._isHasOffers = Boolean(Offers.find((item) => item.type === this._data.type).offers.length);
+    this._isHasDescription = Boolean(Destinations.find((item) => item.name.toLowerCase() === this._data.destination.toLowerCase()));
 
     this.init();
-    console.log(this._data);
   }
 
   init() {
@@ -155,12 +156,20 @@ export default class EventController {
       </section>`.trim();
 
       this._eventForm.getElement().querySelector(`.event__details`).insertAdjacentHTML(Position.AFTERBEGIN, newHtmlOffers);
+      this._eventForm.getElement().querySelector(`.event__details`).classList.remove(`visually-hidden`);
+      this._isHasOffers = true;
+    } else {
+      this._isHasOffers = false;
+      if (!this._isHasDescription) {
+        this._eventForm.getElement().querySelector(`.event__details`).classList.add(`visually-hidden`);
+      }
     }
   }
 
   _reRenderDescription(destination) {
     unrender(this._eventForm.getElement().querySelector(`.event__section--destination`));
     const descriptionData = Destinations.find((item) => item.name.toLowerCase() === destination.toLowerCase());
+
     if (descriptionData) {
       const newHtmlDescription = `<section class="event__section event__section--destination">
         <h3 class="event__section-title event__section-title--destination">Destination</h3>
@@ -174,6 +183,13 @@ export default class EventController {
       </section>`.trim();
 
       this._eventForm.getElement().querySelector(`.event__details`).insertAdjacentHTML(Position.BEFOREEND, newHtmlDescription);
+      this._eventForm.getElement().querySelector(`.event__details`).classList.remove(`visually-hidden`);
+      this._isHasDescription = true;
+    } else {
+      this._isHasDescription = false;
+      if (!this._isHasOffers) {
+        this._eventForm.getElement().querySelector(`.event__details`).classList.add(`visually-hidden`);
+      }
     }
   }
 
@@ -188,6 +204,8 @@ export default class EventController {
     data.offers.forEach((offerName) => this._eventForm.getElement().querySelector(`.event__offer-checkbox[data-offer-name="${offerName.replace(/ /g, `-`)}"]`).checked = true);
     dateStart.setDate(this._data.dateFrom);
     dateEnd.setDate(this._data.dateTo);
+    this._isHasOffers = Boolean(Offers.find((item) => item.type === this._data.type).offers.length);
+    this._isHasDescription = Boolean(Destinations.find((item) => item.name.toLowerCase() === this._data.destination.toLowerCase()));
   }
 
   setDefaultView() {
