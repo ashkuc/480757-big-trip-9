@@ -22,6 +22,7 @@ export default class TripController {
     this._totalSum = 0;
     this._tripTotalCost = document.querySelector(`.trip-info__cost-value`);
     this._currentSortType = `event`;
+    this._creatingEvent = null;
 
     this._subscriptions = [];
     this._onChangeView = this._onChangeView.bind(this);
@@ -119,11 +120,19 @@ export default class TripController {
   }
 
   _onDataChange(newData, oldData) {
-    this._events[this._events.findIndex((item) => item === oldData)] = newData;
+    if (oldData === null && newData !== null) {
+      this._events.unshift(newData);
+    } else if (newData === null && oldData !== null) {
+      this._events.splice(this._events[this._events.findIndex((item) => item === oldData)], 1);
+    } else {
+      this._events[this._events.findIndex((item) => item === oldData)] = newData;
+    }
+    
     unrender(this._daysList.getElement());
     this._daysList.removeElement();
     this._reRenderDaysList();
     this._updateTotalSum();
+    this._creatingEvent = null;
   }
 
   _onChangeView() {
@@ -156,6 +165,10 @@ export default class TripController {
   }
 
   createNewEvent() {
+    if (this._creatingEvent) {
+      return;
+    }
+
     const newEventIndex = this._events.length + 1;
 
     const emptyEvent = {
@@ -168,8 +181,8 @@ export default class TripController {
       type: `flight`,
     };
 
-    const eventController = new EventController(this._daysList, emptyEvent, newEventIndex, this._onDataChange, this._onChangeView, EventControllerMode.ADDING);
-    this._subscriptions.push(eventController.setDefaultView.bind(eventController));
+    this._creatingEvent = new EventController(this._daysList, emptyEvent, newEventIndex, this._onDataChange, this._onChangeView, EventControllerMode.ADDING);
+    this._subscriptions.push(this._creatingEvent.setDefaultView.bind(this._creatingEvent));
   };
 
   init() {

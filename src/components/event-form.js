@@ -93,7 +93,7 @@ export default class EventForm extends AbstractComponent {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-${this._index}" type="text" name="event-price" value="${this._basePrice ? `this._basePrice` : ``}">
+            <input class="event__input  event__input--price" id="event-price-${this._index}" type="text" name="event-price" value="${this._basePrice ? this._basePrice : ``}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>

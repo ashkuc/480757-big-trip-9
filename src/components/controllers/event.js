@@ -50,6 +50,7 @@ export default class EventController {
       'altFormat': `d/m/y H:i`,
       onChange(selectedDates) {
         dateEnd.config.minDate = new Date(selectedDates);
+        dateEnd.config.defaultDate = new Date(selectedDates);
       }
     });
 
@@ -132,10 +133,22 @@ export default class EventController {
         type: formData.get(`event-type`),
       };
 
-      this._onDataChange(entry, this._data);
+      this._onDataChange(entry, this._mode === Mode.DEFAULT ? this._data : null);
 
-      this._container.getElement().replaceChild(this._event.getElement(), this._eventForm.getElement());
+      if (this._mode === Mode.DEFAULT) {
+        this._container.getElement().replaceChild(this._event.getElement(), this._eventForm.getElement());
+      } else {
+        unrender(this._eventForm.getElement());
+        this._eventForm.removeElement();
+      }
+
       document.removeEventListener(`keydown`, onEscKeyDown);
+    });
+
+    this._eventForm.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, () => {
+      unrender(this._eventForm.getElement());
+      this._eventForm.removeElement();
+      this._onDataChange(null, this._mode === Mode.DEFAULT ? this._data : null);
     });
 
     render(this._container.getElement(), currentView.getElement(), renderPosition);
