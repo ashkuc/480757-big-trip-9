@@ -143,6 +143,8 @@ export default class TripController {
     if (this._events.length > 0) {
       this._totalSum = this._events.map((event) => Number(event.basePrice)).reduce((a, b) => a + b);
       this._tripTotalCost.textContent = this._totalSum;
+    } else {
+      this._tripTotalCost.textContent = 0;
     }
   }
 
