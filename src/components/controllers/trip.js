@@ -79,7 +79,7 @@ export default class TripController {
   _renderDay(dayDate, currentDayNumber) {
     const day = new Day(dayDate, currentDayNumber);
     const eventsList = new EventsList();
-    const eventsForRender = this._eventsForRender.filter((event) => Math.floor(new Date(event.dateFrom).getTime() / 1000 / 60 / 60 / 24) === dayDate);
+    const eventsForRender = this._eventsForRender.filter((event) => Math.floor(event.dateFrom / 1000 / 60 / 60 / 24) === dayDate);
 
     this._renderEvents(day, eventsList, eventsForRender);
 
@@ -87,7 +87,7 @@ export default class TripController {
   }
 
   _renderDaysList() {
-    const eventDays = Array.from(new Set(this._events.slice().sort((a, b) => new Date(a.dateFrom).getTime() - new Date(b.dateFrom).getTime()).map((event) => Math.floor(new Date(event.dateFrom).getTime() / 1000 / 60 / 60 / 24))));
+    const eventDays = Array.from(new Set(this._events.slice().sort((a, b) => a.dateFrom - b.dateFrom).map((event) => Math.floor(event.dateFrom / 1000 / 60 / 60 / 24))));
     let currentDayNumber = 1;
 
     eventDays.forEach((dayDate, index, days) => {

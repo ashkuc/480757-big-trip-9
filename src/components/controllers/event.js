@@ -115,7 +115,7 @@ export default class EventController {
     this._eventForm.getElement().querySelector(`.event__input--destination`).addEventListener(`keydown`, function (evt) {
       evt.preventDefault();
       if (evt.key === `Backspace` || evt.key === `Delete`) {
-        this.value = ``;
+        evt.target.value = ``;
       }
     });
 

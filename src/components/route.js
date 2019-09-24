@@ -6,13 +6,10 @@ export default class Route extends AbstractComponent {
     super();
     this._MAX_PLACES_TO_SHOW = 4;
     this._events = events;
-    console.log(this._events.map((event) => event.dateFrom));
-    console.log(Math.min.apply(null, this._events.map((event) => event.dateFrom)));
   }
 
   _getRoute() {
     let destinations = Array.from(new Set(this._events.sort((a, b) => a.dateFrom - b.dateFrom).map((event) => event.destination)));
-    
 
     return destinations.length < this._MAX_PLACES_TO_SHOW ? destinations.map(toCapitalize).join(` &mdash; `) : `${toCapitalize(destinations[0])} &mdash; ... &mdash; ${toCapitalize(destinations[destinations.length - 1])}`;
   }
