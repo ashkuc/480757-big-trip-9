@@ -40,7 +40,7 @@ export default class EventController {
     }
 
     const dateStart = flatpickr(this._eventForm.getElement().querySelector(`.event__input--time[name="event-start-time"]`), {
-      'minDate': Date.now(),
+      'minDate': this._data.dateFrom ? this._data.dateFrom : Date.now(),
       'defaultDate': this._data.dateFrom ? this._data.dateFrom : Date.now(),
       'enableTime': true,
       'dateFormat': `u`,
@@ -75,7 +75,6 @@ export default class EventController {
 
     this._event.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, (evt) => {
       evt.preventDefault();
-      this._onChangeView();
       this._container.getElement().replaceChild(this._eventForm.getElement(), this._event.getElement());
       document.addEventListener(`keydown`, onEscKeyDown);
     });
@@ -128,7 +127,7 @@ export default class EventController {
         dateFrom: Number(formData.get(`event-start-time`)),
         dateTo: Number(formData.get(`event-end-time`)),
         destination: formData.get(`event-destination`),
-        isFavorite: formData.get(`event-favorite`) === `on` ? true : false,
+        isFavorite: formData.get(`event-favorite`) === `on`,
         offers: Array.from(this._eventForm.getElement().querySelectorAll(`.event__offer-checkbox:checked`)).map((input) => input.getAttribute(`data-offer-name`).split(`-`).join(` `)),
         type: formData.get(`event-type`),
       };
@@ -236,8 +235,11 @@ export default class EventController {
     this._reRenderDescription(data.destination);
     this._eventForm.getElement().querySelector(`.event__input--destination`).value = data.destination;
     this._eventForm.getElement().querySelector(`.event__input--price`).value = data.basePrice;
-    this._eventForm.getElement().querySelector(`.event__favorite-checkbox`).checked = data.isFavorite ? true : false;
-    data.offers.forEach((offerName) => this._eventForm.getElement().querySelector(`.event__offer-checkbox[data-offer-name="${offerName.replace(/ /g, `-`)}"]`).checked = true);
+    this._eventForm.getElement().querySelector(`.event__favorite-checkbox`).checked = Boolean(data.isFavorite);
+    data.offers.forEach((offerName) => {
+      const offerSelector = `.event__offer-checkbox[data-offer-name="${offerName.replace(/ /g, `-`)}"]`;
+      this._eventForm.getElement().querySelector(offerSelector).checked = true;
+    });
     dateStart.setDate(this._data.dateFrom);
     dateEnd.setDate(this._data.dateTo);
     this._isHasOffers = Boolean(Offers.find((item) => item.type === this._data.type).offers.length);

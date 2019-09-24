@@ -120,14 +120,16 @@ export default class TripController {
   }
 
   _onDataChange(newData, oldData) {
-    if (oldData === null && newData !== null) {
+    if (newData === null && oldData === null) {
+      this._creatingEvent = null;
+    } else if (oldData === null && newData !== null) {
       this._events.unshift(newData);
     } else if (newData === null && oldData !== null) {
-      this._events.splice(this._events[this._events.findIndex((item) => item === oldData)], 1);
+      this._events.splice(this._events.findIndex((item) => item === oldData), 1);
     } else {
       this._events[this._events.findIndex((item) => item === oldData)] = newData;
     }
-    
+
     unrender(this._daysList.getElement());
     this._daysList.removeElement();
     this._reRenderDaysList();
@@ -185,7 +187,7 @@ export default class TripController {
 
     this._creatingEvent = new EventController(this._daysList, emptyEvent, newEventIndex, this._onDataChange, this._onChangeView, EventControllerMode.ADDING);
     this._subscriptions.push(this._creatingEvent.setDefaultView.bind(this._creatingEvent));
-  };
+  }
 
   init() {
     this._renderMainContent();
