@@ -75,6 +75,7 @@ export default class EventController {
 
     this._event.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, (evt) => {
       evt.preventDefault();
+      this._onChangeView();
       this._container.getElement().replaceChild(this._eventForm.getElement(), this._event.getElement());
       document.addEventListener(`keydown`, onEscKeyDown);
     });

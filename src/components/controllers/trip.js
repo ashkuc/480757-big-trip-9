@@ -133,6 +133,7 @@ export default class TripController {
 
     unrender(this._daysList.getElement());
     this._daysList.removeElement();
+    this._subscriptions = [];
     this._reRenderDaysList();
     this._updateTotalSum();
     this._creatingEvent = null;
@@ -175,6 +176,7 @@ export default class TripController {
       return;
     }
 
+    this._onChangeView();
     const newEventIndex = this._events.length + 1;
 
     const emptyEvent = {
