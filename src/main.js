@@ -7,6 +7,7 @@ import FilterContainer from './components/filter-container.js';
 import FilterItem from './components/filter-item.js';
 import Statistic from './components/statistic.js';
 import TripController from './components/controllers/trip.js';
+import Chart from 'chart.js';
 
 const EVENTS_NUMBER = 4;
 
@@ -86,3 +87,20 @@ renderFilter();
 tripController.init();
 render(tripEventsContainer, statistic.getElement(), Position.AFTER);
 newEventButton.addEventListener(`click`, onNewEventButtonClick);
+
+const moneysChart = new Chart(statistic.getElement().querySelector(`.statistics__chart--money`), {
+  type: 'horizontalBar',
+  data: {
+    labels: [`01 FEB`, `02 FEB`, `03 FEB`, `04 FEB`, `05 FEB`, `06 FEB`, `07 FEB`],
+    datasets: [{
+      data: [4, 6, 3, 1, 5, 2, 0],
+      backgroundColor: `transparent`,
+      borderColor: `#000000`,
+      borderWidth: 1,
+      lineTension: 0,
+      pointRadius: 8,
+      pointHoverRadius: 8,
+      pointBackgroundColor: `#000000`
+    }]
+  }
+});
