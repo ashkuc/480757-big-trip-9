@@ -1,3 +1,4 @@
+import moment from 'moment';
 import AbstractComponent from './abstract-component.js';
 import {toCapitalize, getRandomBetween} from './utils.js';
 
@@ -18,11 +19,11 @@ export default class Route extends AbstractComponent {
 
   _getPeriod() {
     const firstEventStartSeconds = Math.min.apply(null, this._events.map((event) => event.dateFrom));
-    const lastEventEndSeconds = Math.max.apply(null, this._events.map((event) => event.dateFrom + getRandomBetween(7, 14) * 24 * 60 * 60 * 1000));
-    const firstEventMonth = new Date(firstEventStartSeconds).toDateString().split(/ /).slice(1, 3)[0];
-    const firstEventDate = new Date(firstEventStartSeconds).toDateString().split(/ /).slice(1, 3)[1];
-    const lastEventMonth = new Date(lastEventEndSeconds).toDateString().split(/ /).slice(1, 3)[0];
-    const lastEventDate = new Date(lastEventEndSeconds).toDateString().split(/ /).slice(1, 3)[1];
+    const lastEventEndSeconds = Math.max.apply(null, this._events.map((event) => event.dateTo));
+    const firstEventMonth = moment(firstEventStartSeconds).format(`MMM`);
+    const firstEventDate = moment(firstEventStartSeconds).format(`DD`);
+    const lastEventMonth = moment(lastEventEndSeconds).format(`MMM`);
+    const lastEventDate = moment(lastEventEndSeconds).format(`DD`);
 
     if (firstEventMonth === lastEventMonth) {
       return `${firstEventMonth} ${firstEventDate}&nbsp;&mdash;&nbsp;${lastEventDate}`;
