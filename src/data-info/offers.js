@@ -1,28 +1,7 @@
 export const Offers = [
   {
     type: `taxi`,
-    offers: [
-      {
-        name: `add luggage`,
-        price: 120
-      },
-      {
-        name: `order uber`,
-        price: 60
-      },
-      {
-        name: `choose seats`,
-        price: 10
-      },
-      {
-        name: `switch to comfort`,
-        price: 30
-      },
-      {
-        name: `travel by train`,
-        price: 45
-      }
-    ]
+    offers: []
   },
   {
     type: `bus`,

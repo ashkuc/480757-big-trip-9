@@ -49,7 +49,7 @@ export const Types = [
   },
   {
     NAME: `sightseeing`,
-    PRETEXT: `at`,
+    PRETEXT: `in`,
     ICON: `sightseeing.png`,
     IS_MOVEMENT: false,
   },

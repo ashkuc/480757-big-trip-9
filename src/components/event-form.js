@@ -4,9 +4,10 @@ import {Types} from '../data-info/types.js';
 import {TypePlaces} from '../data-info/type-places.js';
 import {Offers} from '../data-info/offers.js';
 import {DesinationsSample as Destinations} from '../data-info/destinations-sample.js';
+import {Mode as EventFormMode} from '../components/controllers/event.js';
 
 export default class EventForm extends AbstractComponent {
-  constructor({basePrice, dateFrom, dateTo, destination, isFavorite, offers, type}, index) {
+  constructor({basePrice, dateFrom, dateTo, destination, isFavorite, offers, type}, index, mode) {
     super();
     this._type = type;
     this._basePrice = basePrice;
@@ -19,16 +20,21 @@ export default class EventForm extends AbstractComponent {
     this._possibleOffers = Offers[Offers.findIndex((offer) => offer.type === this._type)].offers;
     this._offers = offers;
     this._index = index;
+    this._isDefaultMode = mode === EventFormMode.DEFAULT;
   }
 
   _getDestinationInfo() {
-    this._destinationInfo = Destinations.find((destination) => destination.name.toLowerCase() === this._destination.toLowerCase());
-    return this._destinationInfo ? this._destinationInfo : null;
+    if (this._destination) {
+      this._destinationInfo = Destinations.find((destination) => destination.name.toLowerCase() === this._destination.toLowerCase());
+      return this._destinationInfo ? this._destinationInfo : null;
+    } else {
+      return null;
+    }
   }
 
   getTemplate() {
-    return `<li class="trip-events__item">
-      <form class="event event--edit" action="#" method="post">
+    return `${this._isDefaultMode ? `<li class="trip-events__item">` : ``}
+      <form class="${this._isDefaultMode ? `` : `trip-events__item `}event event--edit" action="#" method="post">
         <header class="event__header">
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-${this._index}">
@@ -87,13 +93,13 @@ export default class EventForm extends AbstractComponent {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-${this._index}" type="text" name="event-price" value="${this._basePrice}">
+            <input class="event__input  event__input--price" id="event-price-${this._index}" type="text" name="event-price" value="${this._basePrice ? this._basePrice : ``}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
           <button class="event__reset-btn" type="reset">Delete</button>
 
-          <input id="event-favorite-${this._index}" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${this._isFavorite ? `checked` : ``}>
+          ${this._isDefaultMode ? `<input id="event-favorite-${this._index}" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${this._isFavorite ? `checked` : ``}>
           <label class="event__favorite-btn" for="event-favorite-${this._index}">
             <span class="visually-hidden">Add to favorite</span>
             <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -103,12 +109,12 @@ export default class EventForm extends AbstractComponent {
 
           <button class="event__rollup-btn" type="button">
             <span class="visually-hidden">Open event</span>
-          </button>
+          </button>` : ``}
         </header>
 
-        <section class="event__details">
+        <section class="event__details${this._possibleOffers.length > 0 && this._offers || this._destinationInfo ? `` : ` visually-hidden`}">
 
-          <section class="event__section  event__section--offers">
+          ${this._possibleOffers.length > 0 && this._offers ? `<section class="event__section  event__section--offers">
             <h3 class="event__section-title event__section-title--offers">Offers</h3>
             <div class="event__available-offers">
               ${this._possibleOffers.map((offer) => `<div class="event__offer-selector">
@@ -120,7 +126,7 @@ export default class EventForm extends AbstractComponent {
                 </label>
               </div>`.trim()).join(``)}
             </div>
-          </section>
+          </section>`.trim() : ``}
 
           ${this._destinationInfo ? `<section class="event__section event__section--destination">
             <h3 class="event__section-title event__section-title--destination">Destination</h3>
@@ -134,6 +140,6 @@ export default class EventForm extends AbstractComponent {
           </section>` : ``}
         </section>
       </form>
-    </li>`.trim();
+      ${this._isDefaultMode ? `</li>` : ``}`.trim();
   }
 }

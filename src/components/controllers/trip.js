@@ -7,9 +7,10 @@ import SortContainer from '../sort-container.js';
 import SortItem from '../sort-item.js';
 import NoEvents from '../no-events.js';
 import EventController from './event';
+import {Mode as EventControllerMode} from './event';
 
-export default class {
-  constructor(container, events) {
+export default class TripController {
+  constructor(container, events, reRenderRoute) {
     this._container = container;
     this._events = events;
     this._eventsForRender = new Array(...this._events);
@@ -21,6 +22,8 @@ export default class {
     this._totalSum = 0;
     this._tripTotalCost = document.querySelector(`.trip-info__cost-value`);
     this._currentSortType = `event`;
+    this._creatingEvent = null;
+    this._reRenderRoute = reRenderRoute;
 
     this._subscriptions = [];
     this._onChangeView = this._onChangeView.bind(this);
@@ -77,7 +80,7 @@ export default class {
   _renderDay(dayDate, currentDayNumber) {
     const day = new Day(dayDate, currentDayNumber);
     const eventsList = new EventsList();
-    const eventsForRender = this._eventsForRender.filter((event) => Math.floor(new Date(event.dateFrom).getTime() / 1000 / 60 / 60 / 24) === dayDate);
+    const eventsForRender = this._eventsForRender.filter((event) => Math.floor(event.dateFrom / 1000 / 60 / 60 / 24) === dayDate);
 
     this._renderEvents(day, eventsList, eventsForRender);
 
@@ -85,7 +88,7 @@ export default class {
   }
 
   _renderDaysList() {
-    const eventDays = Array.from(new Set(this._events.slice().sort((a, b) => new Date(a.dateFrom).getTime() - new Date(b.dateFrom).getTime()).map((event) => Math.floor(new Date(event.dateFrom).getTime() / 1000 / 60 / 60 / 24))));
+    const eventDays = Array.from(new Set(this._events.slice().sort((a, b) => a.dateFrom - b.dateFrom).map((event) => Math.floor(event.dateFrom / 1000 / 60 / 60 / 24))));
     let currentDayNumber = 1;
 
     eventDays.forEach((dayDate, index, days) => {
@@ -118,11 +121,23 @@ export default class {
   }
 
   _onDataChange(newData, oldData) {
-    this._events[this._events.findIndex((item) => item === oldData)] = newData;
+    if (newData === null && oldData === null) {
+      this._creatingEvent = null;
+    } else if (oldData === null && newData !== null) {
+      this._events.unshift(newData);
+    } else if (newData === null && oldData !== null) {
+      this._events.splice(this._events.findIndex((item) => item === oldData), 1);
+    } else {
+      this._events[this._events.findIndex((item) => item === oldData)] = newData;
+    }
+
     unrender(this._daysList.getElement());
     this._daysList.removeElement();
+    this._subscriptions = [];
     this._reRenderDaysList();
     this._updateTotalSum();
+    this._creatingEvent = null;
+    this._reRenderRoute();
   }
 
   _onChangeView() {
@@ -133,6 +148,8 @@ export default class {
     if (this._events.length > 0) {
       this._totalSum = this._events.map((event) => Number(event.basePrice)).reduce((a, b) => a + b);
       this._tripTotalCost.textContent = this._totalSum;
+    } else {
+      this._tripTotalCost.textContent = 0;
     }
   }
 
@@ -144,6 +161,36 @@ export default class {
       this._renderDaysList();
       this._updateTotalSum();
     }
+  }
+
+  hide() {
+    this._container.classList.add(`visually-hidden`);
+  }
+
+  show() {
+    this._container.classList.remove(`visually-hidden`);
+  }
+
+  createNewEvent() {
+    if (this._creatingEvent) {
+      return;
+    }
+
+    this._onChangeView();
+    const newEventIndex = this._events.length + 1;
+
+    const emptyEvent = {
+      basePrice: null,
+      dateFrom: null,
+      dateTo: null,
+      destination: null,
+      isFavorite: null,
+      offers: null,
+      type: `flight`,
+    };
+
+    this._creatingEvent = new EventController(this._daysList, emptyEvent, newEventIndex, this._onDataChange, this._onChangeView, EventControllerMode.ADDING);
+    this._subscriptions.push(this._creatingEvent.setDefaultView.bind(this._creatingEvent));
   }
 
   init() {

@@ -9,23 +9,39 @@ import {DesinationsSample as Destinations} from '../../data-info/destinations-sa
 import Event from '../event.js';
 import EventForm from '../event-form.js';
 
+export const Mode = {
+  ADDING: `adding`,
+  DEFAULT: `default`,
+};
+
 export default class EventController {
-  constructor(container, data, index, onDataChange, onChangeView) {
+  constructor(container, data, index, onDataChange, onChangeView, mode = `default`) {
     this._container = container;
     this._data = data;
     this._index = index;
     this._event = new Event(this._data);
-    this._eventForm = new EventForm(this._data, this._index);
+    this._eventForm = new EventForm(this._data, this._index, mode);
     this._onDataChange = onDataChange;
     this._onChangeView = onChangeView;
+    this._isHasOffers = Boolean(Offers.find((item) => item.type === this._data.type).offers.length);
+    this._isHasDescription = this._data.destination ? Boolean(Destinations.find((item) => item.name.toLowerCase() === this._data.destination.toLowerCase())) : false;
+    this._mode = mode;
 
-    this.init();
+    this.init(this._mode);
   }
 
-  init() {
-    flatpickr(this._eventForm.getElement().querySelector(`.event__input--time[name="event-start-time"]`), {
-      'defaultDate': this._data.dateFrom,
-      'minDate': Date.now(),
+  init(mode) {
+    let renderPosition = Position.BEFOREEND;
+    let currentView = this._event;
+
+    if (mode === Mode.ADDING) {
+      renderPosition = Position.BEFORE;
+      currentView = this._eventForm;
+    }
+
+    const dateStart = flatpickr(this._eventForm.getElement().querySelector(`.event__input--time[name="event-start-time"]`), {
+      'minDate': this._data.dateFrom ? this._data.dateFrom : Date.now(),
+      'defaultDate': this._data.dateFrom ? this._data.dateFrom : Date.now(),
       'enableTime': true,
       'dateFormat': `u`,
       'allowInput': true,
@@ -34,12 +50,13 @@ export default class EventController {
       'altFormat': `d/m/y H:i`,
       onChange(selectedDates) {
         dateEnd.config.minDate = new Date(selectedDates);
+        dateEnd.config.defaultDate = new Date(selectedDates);
       }
     });
 
     const dateEnd = flatpickr(this._eventForm.getElement().querySelector(`.event__input--time[name="event-end-time"]`), {
-      'defaultDate': this._data.dateTo,
-      'minDate': this._data.dateFrom,
+      'defaultDate': this._data.dateTo ? this._data.dateTo : Date.now(),
+      'minDate': this._data.dateFrom ? this._data.dateFrom : Date.now(),
       'enableTime': true,
       'dateFormat': `u`,
       'allowInput': true,
@@ -51,6 +68,7 @@ export default class EventController {
     const onEscKeyDown = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
         this._container.getElement().replaceChild(this._event.getElement(), this._eventForm.getElement());
+        this._resetTask(this._data, dateStart, dateEnd);
         document.removeEventListener(`keydown`, onEscKeyDown);
       }
     };
@@ -62,11 +80,13 @@ export default class EventController {
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
-    this._eventForm.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, (evt) => {
-      evt.preventDefault();
-      this._container.getElement().replaceChild(this._event.getElement(), this._eventForm.getElement());
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    });
+    if (this._eventForm.getElement().querySelector(`.event__rollup-btn`)) {
+      this._eventForm.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+        this._container.getElement().replaceChild(this._event.getElement(), this._eventForm.getElement());
+        document.removeEventListener(`keydown`, onEscKeyDown);
+      });
+    }
 
     this._eventForm.getElement().querySelectorAll(`input[type="text"]`).forEach((input) => {
       input.addEventListener(`focus`, () => {
@@ -92,7 +112,14 @@ export default class EventController {
       this._reRenderDescription(evt.target.value);
     });
 
-    this._eventForm.getElement().querySelector(`form`).addEventListener(`submit`, (evt) => {
+    this._eventForm.getElement().querySelector(`.event__input--destination`).addEventListener(`keydown`, function (evt) {
+      evt.preventDefault();
+      if (evt.key === `Backspace` || evt.key === `Delete`) {
+        evt.target.value = ``;
+      }
+    });
+
+    this._eventForm.getElement().addEventListener(`submit`, (evt) => {
       evt.preventDefault();
       const formData = new FormData(evt.target);
 
@@ -101,18 +128,30 @@ export default class EventController {
         dateFrom: Number(formData.get(`event-start-time`)),
         dateTo: Number(formData.get(`event-end-time`)),
         destination: formData.get(`event-destination`),
-        isFavorite: formData.get(`event-favorite`) === `on` ? true : false,
+        isFavorite: formData.get(`event-favorite`) === `on`,
         offers: Array.from(this._eventForm.getElement().querySelectorAll(`.event__offer-checkbox:checked`)).map((input) => input.getAttribute(`data-offer-name`).split(`-`).join(` `)),
         type: formData.get(`event-type`),
       };
 
-      this._onDataChange(entry, this._data);
+      this._onDataChange(entry, this._mode === Mode.DEFAULT ? this._data : null);
 
-      this._container.getElement().replaceChild(this._event.getElement(), this._eventForm.getElement());
+      if (this._mode === Mode.DEFAULT) {
+        this._container.getElement().replaceChild(this._event.getElement(), this._eventForm.getElement());
+      } else {
+        unrender(this._eventForm.getElement());
+        this._eventForm.removeElement();
+      }
+
       document.removeEventListener(`keydown`, onEscKeyDown);
     });
 
-    render(this._container.getElement(), this._event.getElement(), Position.BEFOREEND);
+    this._eventForm.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, () => {
+      unrender(this._eventForm.getElement());
+      this._eventForm.removeElement();
+      this._onDataChange(null, this._mode === Mode.DEFAULT ? this._data : null);
+    });
+
+    render(this._container.getElement(), currentView.getElement(), renderPosition);
   }
 
   _reRenderDatalist(typeName) {
@@ -134,7 +173,7 @@ export default class EventController {
   }
 
   _reRenderOffers(typeName) {
-    unrender(this._eventForm.getElement().querySelector(`.event__section`));
+    unrender(this._eventForm.getElement().querySelector(`.event__section--offers`));
     const offers = Offers.find((item) => item.type === typeName).offers;
 
     if (offers.length > 0) {
@@ -153,12 +192,20 @@ export default class EventController {
       </section>`.trim();
 
       this._eventForm.getElement().querySelector(`.event__details`).insertAdjacentHTML(Position.AFTERBEGIN, newHtmlOffers);
+      this._eventForm.getElement().querySelector(`.event__details`).classList.remove(`visually-hidden`);
+      this._isHasOffers = true;
+    } else {
+      this._isHasOffers = false;
+      if (!this._isHasDescription) {
+        this._eventForm.getElement().querySelector(`.event__details`).classList.add(`visually-hidden`);
+      }
     }
   }
 
   _reRenderDescription(destination) {
     unrender(this._eventForm.getElement().querySelector(`.event__section--destination`));
     const descriptionData = Destinations.find((item) => item.name.toLowerCase() === destination.toLowerCase());
+
     if (descriptionData) {
       const newHtmlDescription = `<section class="event__section event__section--destination">
         <h3 class="event__section-title event__section-title--destination">Destination</h3>
@@ -172,7 +219,32 @@ export default class EventController {
       </section>`.trim();
 
       this._eventForm.getElement().querySelector(`.event__details`).insertAdjacentHTML(Position.BEFOREEND, newHtmlDescription);
+      this._eventForm.getElement().querySelector(`.event__details`).classList.remove(`visually-hidden`);
+      this._isHasDescription = true;
+    } else {
+      this._isHasDescription = false;
+      if (!this._isHasOffers) {
+        this._eventForm.getElement().querySelector(`.event__details`).classList.add(`visually-hidden`);
+      }
     }
+  }
+
+  _resetTask(data, dateStart, dateEnd) {
+    this._reRenderDatalist(data.type);
+    this._updateType(data.type);
+    this._reRenderOffers(data.type);
+    this._reRenderDescription(data.destination);
+    this._eventForm.getElement().querySelector(`.event__input--destination`).value = data.destination;
+    this._eventForm.getElement().querySelector(`.event__input--price`).value = data.basePrice;
+    this._eventForm.getElement().querySelector(`.event__favorite-checkbox`).checked = Boolean(data.isFavorite);
+    data.offers.forEach((offerName) => {
+      const offerSelector = `.event__offer-checkbox[data-offer-name="${offerName.replace(/ /g, `-`)}"]`;
+      this._eventForm.getElement().querySelector(offerSelector).checked = true;
+    });
+    dateStart.setDate(this._data.dateFrom);
+    dateEnd.setDate(this._data.dateTo);
+    this._isHasOffers = Boolean(Offers.find((item) => item.type === this._data.type).offers.length);
+    this._isHasDescription = Boolean(Destinations.find((item) => item.name.toLowerCase() === this._data.destination.toLowerCase()));
   }
 
   setDefaultView() {
