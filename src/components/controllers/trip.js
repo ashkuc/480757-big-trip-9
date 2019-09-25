@@ -10,7 +10,7 @@ import EventController from './event';
 import {Mode as EventControllerMode} from './event';
 
 export default class TripController {
-  constructor(container, events) {
+  constructor(container, events, reRenderRoute) {
     this._container = container;
     this._events = events;
     this._eventsForRender = new Array(...this._events);
@@ -23,6 +23,7 @@ export default class TripController {
     this._tripTotalCost = document.querySelector(`.trip-info__cost-value`);
     this._currentSortType = `event`;
     this._creatingEvent = null;
+    this._reRenderRoute = reRenderRoute;
 
     this._subscriptions = [];
     this._onChangeView = this._onChangeView.bind(this);
@@ -135,6 +136,7 @@ export default class TripController {
     this._reRenderDaysList();
     this._updateTotalSum();
     this._creatingEvent = null;
+    this._reRenderRoute();
   }
 
   _onChangeView() {

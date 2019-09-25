@@ -1,5 +1,5 @@
 import {getEvent, getMenuItems, getFilterItems} from './data-info/sample-data.js';
-import {Position, render} from './components/utils.js';
+import {Position, render, unrender} from './components/utils.js';
 import Route from './components/route.js';
 import Menu from './components/menu-container.js';
 import MenuItem from './components/menu-item.js';
@@ -23,7 +23,6 @@ const route = new Route(eventMocks);
 const menu = new Menu();
 const filterContainer = new FilterContainer();
 const statistic = new Statistic();
-const tripController = new TripController(tripEventsContainer, eventMocks);
 
 // Menu
 menu.getElement().addEventListener(`click`, (evt) => {
@@ -71,7 +70,15 @@ const onNewEventButtonClick = (evt) => {
   tripController.createNewEvent();
 };
 
+const reRenderRoute = () => {
+  unrender(route.getElement());
+  route.removeElement();
+  render(tripInfoContainer, route.getElement(), Position.AFTERBEGIN);
+};
+
 statistic.getElement().classList.add(`visually-hidden`);
+
+const tripController = new TripController(tripEventsContainer, eventMocks, reRenderRoute);
 
 render(tripInfoContainer, route.getElement(), Position.AFTERBEGIN);
 renderMenu();
