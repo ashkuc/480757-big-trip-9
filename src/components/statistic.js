@@ -18,12 +18,4 @@ export default class Statistic extends AbstractComponent {
       </div>
     </section>`.trim();
   }
-
-  hide() {
-    this.getElement().classList.add(`visually-hidden`);
-  }
-
-  show() {
-    this.getElement().classList.remove(`visually-hidden`);
-  }
 }

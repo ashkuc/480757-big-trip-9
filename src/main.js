@@ -5,9 +5,8 @@ import Menu from './components/menu-container.js';
 import MenuItem from './components/menu-item.js';
 import FilterContainer from './components/filter-container.js';
 import FilterItem from './components/filter-item.js';
-import Statistic from './components/statistic.js';
 import TripController from './components/controllers/trip.js';
-import Chart from 'chart.js';
+import StatisticController from './components/controllers/statistic.js';
 
 const EVENTS_NUMBER = 4;
 
@@ -23,7 +22,7 @@ const filterItems = getFilterItems();
 const route = new Route(eventMocks);
 const menu = new Menu();
 const filterContainer = new FilterContainer();
-const statistic = new Statistic();
+const statisticController = new StatisticController(tripEventsContainer, eventMocks);
 
 // Menu
 menu.getElement().addEventListener(`click`, (evt) => {
@@ -34,12 +33,12 @@ menu.getElement().addEventListener(`click`, (evt) => {
 
     switch (evt.target.textContent) {
       case `Table`:
-        statistic.hide();
+        statisticController.hide();
         tripController.show();
         break;
       case `Stats`:
         tripController.hide();
-        statistic.show();
+        statisticController.show();
         break;
     }
   }
@@ -77,30 +76,11 @@ const reRenderRoute = () => {
   render(tripInfoContainer, route.getElement(), Position.AFTERBEGIN);
 };
 
-statistic.getElement().classList.add(`visually-hidden`);
-
 const tripController = new TripController(tripEventsContainer, eventMocks, reRenderRoute);
 
 render(tripInfoContainer, route.getElement(), Position.AFTERBEGIN);
 renderMenu();
 renderFilter();
 tripController.init();
-render(tripEventsContainer, statistic.getElement(), Position.AFTER);
+statisticController.init();
 newEventButton.addEventListener(`click`, onNewEventButtonClick);
-
-const moneysChart = new Chart(statistic.getElement().querySelector(`.statistics__chart--money`), {
-  type: 'horizontalBar',
-  data: {
-    labels: [`01 FEB`, `02 FEB`, `03 FEB`, `04 FEB`, `05 FEB`, `06 FEB`, `07 FEB`],
-    datasets: [{
-      data: [4, 6, 3, 1, 5, 2, 0],
-      backgroundColor: `transparent`,
-      borderColor: `#000000`,
-      borderWidth: 1,
-      lineTension: 0,
-      pointRadius: 8,
-      pointHoverRadius: 8,
-      pointBackgroundColor: `#000000`
-    }]
-  }
-});
