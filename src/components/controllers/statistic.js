@@ -18,19 +18,29 @@ export default class StatisticController {
     Chart.defaults.scale.gridLines.drawBorder = false;
     Chart.defaults.scale.gridLines.drawOnChartArea = false;
     Chart.defaults.scale.gridLines.drawTicks = false;
+    Chart.defaults.global.legend.display = false;
+    Chart.defaults.global.title.display = true;
+    Chart.defaults.global.title.fontSize = `28`;
+    Chart.defaults.global.title.fontColor = `#000000`;
+    Chart.defaults.global.title.padding = 40;
+    Chart.defaults.global.title.position = `left`;
+
+    console.log(Chart.defaults);
     
     const moneysChart = new Chart(this._statisticMoney, {
       type: `horizontalBar`,
       data: {
         plugins: [ChartDataLabels],
-        labels: [`01 FEB`, `02 FEB`, `03 FEB`, `04 FEB`, `05 FEB`, `06 FEB`, `07 FEB`],
+        labels: [`01 FEB`, `02 FEB`, `03 FEB`, `04 FEB`, `04 FEB`, `04 FEB`],
         datasets: [{
-          data: [43, 65, 31, 18, 55, 263, 47],
+          label: `MONEY`,
+          data: [43, 65, 31, 18, 18, 18],
           backgroundColor: `#ffffff`,
           hoverBackgroundColor: `#078ff0`,
         }]
       },
-      options:{
+      options: {
+        maintainAspectRatio: false,
         plugins: {
           datalabels: {
             anchor: `end`,
@@ -39,8 +49,11 @@ export default class StatisticController {
         },
         scales:{
           xAxes: [{
-            display: false
-          }]
+            display: false,
+          }],
+        },
+        title: {
+          text: `MONEY`,
         }
       }
     });
