@@ -8,7 +8,9 @@ export default class StatisticController {
     this._container = container;
     this._data = data;
     this._statistic = new Statistic(this._data);
-    this._statisticMoney = this._statistic.getElement().querySelector(`.statistics__chart--money`);
+    this._moneyStatsContainer = this._statistic.getElement().querySelector(`.statistics__chart--money`);
+    this._moneyStats = this._getMoneyStats();
+    this._moneyChart = null;
   }
   
   init() {
@@ -25,16 +27,16 @@ export default class StatisticController {
     Chart.defaults.global.title.padding = 40;
     Chart.defaults.global.title.position = `left`;
 
-    console.log(Chart.defaults);
+    this._moneyStatsContainer.style.height = this._moneyStats.size * 55 + `px`;
     
-    const moneysChart = new Chart(this._statisticMoney, {
+    this._moneyChart = new Chart(this._moneyStatsContainer, {
       type: `horizontalBar`,
       data: {
         plugins: [ChartDataLabels],
-        labels: [`01 FEB`, `02 FEB`, `03 FEB`, `04 FEB`, `04 FEB`, `04 FEB`],
+        labels: Array.from(this._moneyStats.keys()),
         datasets: [{
           label: `MONEY`,
-          data: [43, 65, 31, 18, 18, 18],
+          data: Array.from(this._moneyStats.values()),
           backgroundColor: `#ffffff`,
           hoverBackgroundColor: `#078ff0`,
         }]
@@ -49,8 +51,15 @@ export default class StatisticController {
         },
         scales:{
           xAxes: [{
+            ticks: {
+              beginAtZero:true,
+              display: false
+            },
             display: false,
           }],
+          yAxes: [{
+            barThickness: 40,
+          }]
         },
         title: {
           text: `MONEY`,
@@ -65,5 +74,11 @@ export default class StatisticController {
 
   show() {
     this._statistic.getElement().classList.remove(`visually-hidden`);
+  }
+
+  _getMoneyStats() {
+    const types = Array.from(new Set(this._data.map((item) => item.type)));
+    const moneyStats = new Map(types.map((type) => [type, this._data.filter((item) => item.type === type).map((item) => item.basePrice).reduce((a, b) => a + b)]));
+    return moneyStats;
   }
 }

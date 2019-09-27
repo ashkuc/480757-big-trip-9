@@ -9,6 +9,6 @@ export default class MenuItem extends AbstractComponent {
   }
 
   getTemplate() {
-    return `<a class="trip-tabs__btn${this._isActive ? ` trip-tabs__btn--active` : ``}" href="#">${toCapitalize(this._name)}</a>`;
+    return `<a class="trip-tabs__btn${this._isActive ? ` trip-tabs__btn--active` : ``}" href="#" data-name="${this._name}">${toCapitalize(this._name)}</a>`;
   }
 }

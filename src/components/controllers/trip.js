@@ -8,6 +8,7 @@ import SortItem from '../sort-item.js';
 import NoEvents from '../no-events.js';
 import EventController from './event';
 import {Mode as EventControllerMode} from './event';
+import { timingSafeEqual } from 'crypto';
 
 export default class TripController {
   constructor(container, events, reRenderRoute) {

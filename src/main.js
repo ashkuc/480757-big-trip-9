@@ -28,17 +28,13 @@ const statisticController = new StatisticController(tripEventsContainer, eventMo
 menu.getElement().addEventListener(`click`, (evt) => {
   if (evt.target.tagName === `A`) {
     evt.preventDefault();
-    menu.getElement().querySelector(`.trip-tabs__btn--active`).classList.remove(`trip-tabs__btn--active`);
-    evt.target.classList.add(`trip-tabs__btn--active`);
 
     switch (evt.target.textContent) {
       case `Table`:
-        statisticController.hide();
-        tripController.show();
+        showTable();
         break;
       case `Stats`:
-        tripController.hide();
-        statisticController.show();
+        showStats();
         break;
     }
   }
@@ -65,8 +61,23 @@ const renderFilter = () => {
   render(tripControlsHeadings[1], filterContainer.getElement(), Position.AFTER);
 };
 
+const showTable = () => {
+  menu.getElement().querySelector(`.trip-tabs__btn--active`).classList.remove(`trip-tabs__btn--active`);
+  menu.getElement().querySelector(`.trip-tabs__btn[data-name="table"]`).classList.add(`trip-tabs__btn--active`);
+  statisticController.hide();
+  tripController.show();
+};
+
+const showStats = () => {
+  menu.getElement().querySelector(`.trip-tabs__btn--active`).classList.remove(`trip-tabs__btn--active`);
+  menu.getElement().querySelector(`.trip-tabs__btn[data-name="stats"]`).classList.add(`trip-tabs__btn--active`);
+  tripController.hide();
+  statisticController.show();
+};
+
 const onNewEventButtonClick = (evt) => {
   evt.preventDefault();
+  showTable();
   tripController.createNewEvent();
 };
 
