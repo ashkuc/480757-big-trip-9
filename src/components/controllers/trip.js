@@ -140,6 +140,7 @@ export default class TripController {
     this._creatingEvent = null;
     this._reRenderRoute();
     this._statisticController.update();
+    this._events.push(null);
   }
 
   _onChangeView() {

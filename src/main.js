@@ -82,3 +82,6 @@ filterController.init();
 tripController.init();
 statisticController.init();
 newEventButton.addEventListener(`click`, onNewEventButtonClick);
+setInterval(() => {
+  console.log(eventMocks.length);
+}, 500)

@@ -1,4 +1,3 @@
-import AbstractComponent from "../abstract-component";
 import FilterContainer from '../filter-container.js';
 import FilterItem from '../filter-item.js';
 import {getFilterItems} from "../../data-info/sample-data";
