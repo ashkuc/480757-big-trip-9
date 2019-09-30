@@ -1,10 +1,9 @@
-import {getEvent, getMenuItems, getFilterItems} from './data-info/sample-data.js';
+import {getEvent, getMenuItems} from './data-info/sample-data.js';
 import {Position, render, unrender} from './components/utils.js';
 import Route from './components/route.js';
 import Menu from './components/menu-container.js';
 import MenuItem from './components/menu-item.js';
-import FilterContainer from './components/filter-container.js';
-import FilterItem from './components/filter-item.js';
+import FilterController from './components/controllers/filter.js';
 import TripController from './components/controllers/trip.js';
 import StatisticController from './components/controllers/statistic.js';
 
@@ -17,11 +16,10 @@ const newEventButton = document.querySelector(`.trip-main__event-add-btn`);
 
 const eventMocks = new Array(EVENTS_NUMBER).fill(``).map(getEvent);
 const menuItems = getMenuItems();
-const filterItems = getFilterItems();
 
 const route = new Route(eventMocks);
 const menu = new Menu();
-const filterContainer = new FilterContainer();
+const filterController = new FilterController(tripControlsHeadings[1], eventMocks);
 const statisticController = new StatisticController(tripEventsContainer, eventMocks);
 
 // Menu
@@ -48,17 +46,6 @@ const renderMenuItem = (menuItemInfo) => {
 const renderMenu = () => {
   menuItems.forEach((menuItemInfo) => renderMenuItem(menuItemInfo));
   render(tripControlsHeadings[0], menu.getElement(), Position.AFTER);
-};
-
-// Filter
-const renderFilterItem = (filterItemInfo) => {
-  const filterItem = new FilterItem(filterItemInfo);
-  render(filterContainer.getElement().querySelector(`button[type="submit"]`), filterItem.getElement(), Position.BEFORE);
-};
-
-const renderFilter = () => {
-  filterItems.forEach((filterItemInfo) => renderFilterItem(filterItemInfo));
-  render(tripControlsHeadings[1], filterContainer.getElement(), Position.AFTER);
 };
 
 const showTable = () => {
@@ -91,7 +78,7 @@ const tripController = new TripController(tripEventsContainer, eventMocks, reRen
 
 render(tripInfoContainer, route.getElement(), Position.AFTERBEGIN);
 renderMenu();
-renderFilter();
+filterController.init();
 tripController.init();
 statisticController.init();
 newEventButton.addEventListener(`click`, onNewEventButtonClick);
