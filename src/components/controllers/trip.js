@@ -8,10 +8,9 @@ import SortItem from '../sort-item.js';
 import NoEvents from '../no-events.js';
 import EventController from './event';
 import {Mode as EventControllerMode} from './event';
-import { timingSafeEqual } from 'crypto';
 
 export default class TripController {
-  constructor(container, events, reRenderRoute) {
+  constructor(container, events, reRenderRoute, statisticController) {
     this._container = container;
     this._events = events;
     this._eventsForRender = new Array(...this._events);
@@ -25,6 +24,7 @@ export default class TripController {
     this._currentSortType = `event`;
     this._creatingEvent = null;
     this._reRenderRoute = reRenderRoute;
+    this._statisticController = statisticController;
 
     this._subscriptions = [];
     this._onChangeView = this._onChangeView.bind(this);
@@ -139,6 +139,7 @@ export default class TripController {
     this._updateTotalSum();
     this._creatingEvent = null;
     this._reRenderRoute();
+    this._statisticController.update();
   }
 
   _onChangeView() {

@@ -87,7 +87,7 @@ const reRenderRoute = () => {
   render(tripInfoContainer, route.getElement(), Position.AFTERBEGIN);
 };
 
-const tripController = new TripController(tripEventsContainer, eventMocks, reRenderRoute);
+const tripController = new TripController(tripEventsContainer, eventMocks, reRenderRoute, statisticController);
 
 render(tripInfoContainer, route.getElement(), Position.AFTERBEGIN);
 renderMenu();
