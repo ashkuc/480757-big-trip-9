@@ -1,6 +1,6 @@
 import moment from 'moment';
 import AbstractComponent from './abstract-component.js';
-import {toCapitalize, getRandomBetween} from './utils.js';
+import {toCapitalize} from './utils.js';
 
 export default class Route extends AbstractComponent {
   constructor(events) {

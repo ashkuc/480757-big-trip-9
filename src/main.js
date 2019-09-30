@@ -8,7 +8,7 @@ import FilterItem from './components/filter-item.js';
 import TripController from './components/controllers/trip.js';
 import StatisticController from './components/controllers/statistic.js';
 
-const EVENTS_NUMBER = 4;
+const EVENTS_NUMBER = 8;
 
 const tripInfoContainer = document.querySelector(`.trip-info`);
 const tripControlsHeadings = document.querySelectorAll(`.trip-controls h2`);
