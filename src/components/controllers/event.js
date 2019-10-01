@@ -26,11 +26,14 @@ export default class EventController {
     this._isHasOffers = Boolean(Offers.find((item) => item.type === this._data.type).offers.length);
     this._isHasDescription = this._data.destination ? Boolean(Destinations.find((item) => item.name.toLowerCase() === this._data.destination.toLowerCase())) : false;
     this._mode = mode;
+    this._dateStart = null;
+    this._dateEnd = null;
 
     this.init(this._mode);
   }
 
   init(mode) {
+    const self = this;
     let renderPosition = Position.BEFOREEND;
     let currentView = this._event;
 
@@ -39,7 +42,7 @@ export default class EventController {
       currentView = this._eventForm;
     }
 
-    const dateStart = flatpickr(this._eventForm.getElement().querySelector(`.event__input--time[name="event-start-time"]`), {
+    this._dateStart = flatpickr(this._eventForm.getElement().querySelector(`.event__input--time[name="event-start-time"]`), {
       'minDate': this._data.dateFrom ? this._data.dateFrom : Date.now(),
       'defaultDate': this._data.dateFrom ? this._data.dateFrom : Date.now(),
       'enableTime': true,
@@ -49,12 +52,11 @@ export default class EventController {
       'altInput': true,
       'altFormat': `d/m/y H:i`,
       onChange(selectedDates) {
-        dateEnd.config.minDate = new Date(selectedDates);
-        dateEnd.config.defaultDate = new Date(selectedDates);
+        updateDateEnd.call(self, selectedDates);
       }
     });
 
-    const dateEnd = flatpickr(this._eventForm.getElement().querySelector(`.event__input--time[name="event-end-time"]`), {
+    this._dateEnd = flatpickr(this._eventForm.getElement().querySelector(`.event__input--time[name="event-end-time"]`), {
       'defaultDate': this._data.dateTo ? this._data.dateTo : Date.now(),
       'minDate': this._data.dateFrom ? this._data.dateFrom : Date.now(),
       'enableTime': true,
@@ -65,10 +67,15 @@ export default class EventController {
       'altFormat': `d/m/y H:i`,
     });
 
+    const updateDateEnd = function (selectedDates) {
+      this._dateEnd.config.minDate = new Date(selectedDates);
+      this._dateEnd.config.defaultDate = new Date(selectedDates);
+    };
+
     const onEscKeyDown = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
         this._container.getElement().replaceChild(this._event.getElement(), this._eventForm.getElement());
-        this._resetTask(this._data, dateStart, dateEnd);
+        this._resetTask(this._data, this._dateStart, this._dateEnd);
         document.removeEventListener(`keydown`, onEscKeyDown);
       }
     };
@@ -251,5 +258,10 @@ export default class EventController {
     if (this._container.getElement().contains(this._eventForm.getElement())) {
       this._container.getElement().replaceChild(this._event.getElement(), this._eventForm.getElement());
     }
+  }
+
+  destroyFlatpickr() {
+    this._dateStart.destroy();
+    this._dateEnd.destroy();
   }
 }

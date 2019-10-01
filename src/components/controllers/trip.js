@@ -46,6 +46,7 @@ export default class TripController {
     if (evt.target.tagName === `INPUT`) {
       unrender(this._daysList.getElement());
       this._daysList.removeElement();
+      this._subscriptions.forEach((item) => item.destroyFlatpickr());
       this._currentSortType = evt.target.getAttribute(`data-sort-type`);
       this._reRenderDaysList();
     }
@@ -70,7 +71,10 @@ export default class TripController {
 
   _renderEvent(eventsList, eventInfo, index) {
     const eventController = new EventController(eventsList, eventInfo, index, this._onDataChange, this._onChangeView);
-    this._subscriptions.push(eventController.setDefaultView.bind(eventController));
+    this._subscriptions.push({
+      setDefaultView: eventController.setDefaultView.bind(eventController),
+      destroyFlatpickr: eventController.destroyFlatpickr.bind(eventController),
+    });
   }
 
   _renderEvents(day, eventsList, eventsInfo) {
@@ -134,6 +138,7 @@ export default class TripController {
 
     unrender(this._daysList.getElement());
     this._daysList.removeElement();
+    this._subscriptions.forEach((item) => item.destroyFlatpickr());
     this._subscriptions = [];
     this._reRenderDaysList();
     this._updateTotalSum();
@@ -143,7 +148,7 @@ export default class TripController {
   }
 
   _onChangeView() {
-    this._subscriptions.forEach((subscription) => subscription());
+    this._subscriptions.forEach((item) => item.setDefaultView());
   }
 
   _updateTotalSum() {
@@ -192,7 +197,10 @@ export default class TripController {
     };
 
     this._creatingEvent = new EventController(this._daysList, emptyEvent, newEventIndex, this._onDataChange, this._onChangeView, EventControllerMode.ADDING);
-    this._subscriptions.push(this._creatingEvent.setDefaultView.bind(this._creatingEvent));
+    this._subscriptions.push({
+      setDefaultView: eventController.setDefaultView.bind(eventController),
+      destroyFlatpickr: eventController.destroyFlatpickr.bind(eventController),
+    });
   }
 
   init() {
