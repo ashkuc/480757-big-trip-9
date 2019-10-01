@@ -5,20 +5,23 @@ import Menu from './components/menu-container.js';
 import MenuItem from './components/menu-item.js';
 import TripController from './components/controllers/trip.js';
 import StatisticController from './components/controllers/statistic.js';
+import { EventsModelMock } from './eventsModel';
 
-const EVENTS_NUMBER = 8;
+const EVENTS_COUNT = 8;
 
 const tripInfoContainer = document.querySelector(`.trip-info`);
 const tripControlsHeadings = document.querySelectorAll(`.trip-controls h2`);
 const tripEventsContainer = document.querySelector(`.trip-events`);
 const newEventButton = document.querySelector(`.trip-main__event-add-btn`);
 
-const eventMocks = new Array(EVENTS_NUMBER).fill(``).map(getEvent);
+
+// const eventMocks = new Array(EVENTS_NUMBER).fill(``).map(getEvent);
+const eventsModel = new EventsModelMock(EVENTS_COUNT);
 const menuItems = getMenuItems();
 
-const route = new Route(eventMocks);
+const route = new Route(eventsModel);
 const menu = new Menu();
-const statisticController = new StatisticController(tripEventsContainer, eventMocks);
+const statisticController = new StatisticController(tripEventsContainer, eventsModel);
 
 // Menu
 menu.getElement().addEventListener(`click`, (evt) => {
@@ -72,7 +75,7 @@ const reRenderRoute = () => {
   render(tripInfoContainer, route.getElement(), Position.AFTERBEGIN);
 };
 
-const tripController = new TripController(tripEventsContainer, eventMocks, reRenderRoute, statisticController, tripControlsHeadings[1]);
+const tripController = new TripController(tripEventsContainer, eventsModel, reRenderRoute, statisticController, tripControlsHeadings[1]);
 
 render(tripInfoContainer, route.getElement(), Position.AFTERBEGIN);
 renderMenu();

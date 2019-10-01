@@ -3,14 +3,14 @@ import AbstractComponent from './abstract-component.js';
 import {toCapitalize} from './utils.js';
 
 export default class Route extends AbstractComponent {
-  constructor(events) {
+  constructor(eventsModel) {
     super();
     this._MAX_PLACES_TO_SHOW = 4;
-    this._events = events;
+    this._eventsModel = eventsModel;
   }
 
   _getRoute() {
-    let destinations = Array.from(new Set(this._events.sort((a, b) => a.dateFrom - b.dateFrom).map((event) => event.destination)));
+    let destinations = Array.from(new Set(this._eventsModel.events.sort((a, b) => a.dateFrom - b.dateFrom).map((event) => event.destination)));
 
     return destinations.length < this._MAX_PLACES_TO_SHOW
       ? destinations.map(toCapitalize).join(` &mdash; `)
@@ -18,8 +18,8 @@ export default class Route extends AbstractComponent {
   }
 
   _getPeriod() {
-    const firstEventStartSeconds = Math.min.apply(null, this._events.map((event) => event.dateFrom));
-    const lastEventEndSeconds = Math.max.apply(null, this._events.map((event) => event.dateTo));
+    const firstEventStartSeconds = Math.min.apply(null, this._eventsModel.events.map((event) => event.dateFrom));
+    const lastEventEndSeconds = Math.max.apply(null, this._eventsModel.events.map((event) => event.dateTo));
     const firstEventMonth = moment(firstEventStartSeconds).format(`MMM`);
     const firstEventDate = moment(firstEventStartSeconds).format(`DD`);
     const lastEventMonth = moment(lastEventEndSeconds).format(`MMM`);

@@ -15,8 +15,8 @@ export default class FilterController {
     const renderFilterItem = (filterItemInfo) => {
       const filterItem = new FilterItem(filterItemInfo);
       render(this._filterContainer.getElement().querySelector(`button[type="submit"]`), filterItem.getElement(), Position.BEFORE);
-    }
-    
+    };
+
     this._filterItems.forEach((filterItemInfo) => renderFilterItem(filterItemInfo));
 
     render(this._previousElement, this._filterContainer.getElement(), Position.AFTER);

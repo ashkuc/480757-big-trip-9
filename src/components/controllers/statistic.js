@@ -49,10 +49,10 @@ Chart.helpers.merge(Chart.defaults, {
 });
 
 export default class StatisticController {
-  constructor(container, data) {
+  constructor(container, eventsModel) {
     this._container = container;
-    this._data = data;
-    this._statistic = new Statistic(this._data);
+    this._eventsModel = eventsModel;
+    this._statistic = new Statistic(this._eventsModel);
     this._moneyStatsContainer = this._statistic.getElement().querySelector(`.statistics__chart--money`);
     this._transportStatsContainer = this._statistic.getElement().querySelector(`.statistics__chart--transport`);
     this._timeStatsContainer = this._statistic.getElement().querySelector(`.statistics__chart--time`);
@@ -202,21 +202,21 @@ export default class StatisticController {
   }
 
   _getMoneyStats() {
-    const types = Array.from(new Set(this._data.map((item) => item.type)));
-    const moneyStats = new Map(types.map((type) => [type.toUpperCase(), this._data.filter((item) => item.type === type).map((item) => item.basePrice).reduce((a, b) => Number(a) + Number(b))]));
+    const types = Array.from(new Set(this._eventsModel.events.map((item) => item.type)));
+    const moneyStats = new Map(types.map((type) => [type.toUpperCase(), this._eventsModel.events.filter((item) => item.type === type).map((item) => item.basePrice).reduce((a, b) => Number(a) + Number(b))]));
     return moneyStats;
   }
 
   _getTransportStats() {
     const transportTypes = Types.filter((type) => type.IS_MOVEMENT).map((item) => item.NAME);
-    const types = Array.from(new Set(this._data.map((item) => item.type))).filter((type) => transportTypes.find((transportType) => transportType === type));
-    const transportStats = new Map(types.map((type) => [type.toUpperCase(), this._data.filter((item) => item.type === type).length]));
+    const types = Array.from(new Set(this._eventsModel.events.map((item) => item.type))).filter((type) => transportTypes.find((transportType) => transportType === type));
+    const transportStats = new Map(types.map((type) => [type.toUpperCase(), this._eventsModel.events.filter((item) => item.type === type).length]));
     return transportStats;
   }
 
   _getTimeStats() {
-    const destinations = Array.from(new Set(this._data.map((item) => item.destination)));
-    const timeStats = new Map(destinations.map((destination) => [destination.toUpperCase(), Math.round(this._data.filter((item) => item.destination === destination).map((item) => moment.duration(moment(item.dateTo).diff(moment(item.dateFrom))).asHours()).reduce((a, b) => a + b))]));
+    const destinations = Array.from(new Set(this._eventsModel.events.map((item) => item.destination)));
+    const timeStats = new Map(destinations.map((destination) => [destination.toUpperCase(), Math.round(this._eventsModel.events.filter((item) => item.destination === destination).map((item) => moment.duration(moment(item.dateTo).diff(moment(item.dateFrom))).asHours()).reduce((a, b) => a + b))]));
     return timeStats;
   }
 
