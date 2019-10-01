@@ -3,7 +3,6 @@ import {Position, render, unrender} from './components/utils.js';
 import Route from './components/route.js';
 import Menu from './components/menu-container.js';
 import MenuItem from './components/menu-item.js';
-import FilterController from './components/controllers/filter.js';
 import TripController from './components/controllers/trip.js';
 import StatisticController from './components/controllers/statistic.js';
 
@@ -19,7 +18,6 @@ const menuItems = getMenuItems();
 
 const route = new Route(eventMocks);
 const menu = new Menu();
-const filterController = new FilterController(tripControlsHeadings[1], eventMocks);
 const statisticController = new StatisticController(tripEventsContainer, eventMocks);
 
 // Menu
@@ -74,11 +72,10 @@ const reRenderRoute = () => {
   render(tripInfoContainer, route.getElement(), Position.AFTERBEGIN);
 };
 
-const tripController = new TripController(tripEventsContainer, eventMocks, reRenderRoute, statisticController);
+const tripController = new TripController(tripEventsContainer, eventMocks, reRenderRoute, statisticController, tripControlsHeadings[1]);
 
 render(tripInfoContainer, route.getElement(), Position.AFTERBEGIN);
 renderMenu();
-filterController.init();
 tripController.init();
 statisticController.init();
 newEventButton.addEventListener(`click`, onNewEventButtonClick);

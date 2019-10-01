@@ -1,29 +1,27 @@
 import {Position, render, unrender} from '../utils.js';
-import {getSortItems} from '../../data-info/sample-data.js';
 import DaysList from '../days-list.js';
 import Day from '../day.js';
 import EventsList from '../events-list.js';
-import SortContainer from '../sort-container.js';
-import SortItem from '../sort-item.js';
 import NoEvents from '../no-events.js';
 import EventController from './event';
 import {Mode as EventControllerMode} from './event';
+import SortController from '../controllers/sort.js';
+import FilterController from '../controllers/filter.js';
 
 export default class TripController {
-  constructor(container, events, reRenderRoute, statisticController) {
+  constructor(container, events, reRenderRoute, statisticController, filterHeading) {
     this._container = container;
     this._events = events;
     this._eventsForRender = new Array(...this._events);
     this._daysList = new DaysList();
-    this._sortItems = getSortItems();
-    this._sortContainer = new SortContainer();
     this._noEvents = new NoEvents();
-    this._onSortItemClick = this._onSortItemClick.bind(this);
     this._totalSum = 0;
     this._tripTotalCost = document.querySelector(`.trip-info__cost-value`);
-    this._currentSortType = `event`;
     this._creatingEvent = null;
     this._reRenderRoute = reRenderRoute;
+    this._filterHeading = filterHeading;
+    this._filterController = new FilterController(this._filterHeading, this._events);
+    this._sortController = new SortController(this._container, this._events, this._onSortEvants);
     this._statisticController = statisticController;
 
     this._subscriptions = [];
@@ -31,42 +29,51 @@ export default class TripController {
     this._onDataChange = this._onDataChange.bind(this);
   }
 
-  _renderSortItem(sortItemInfo) {
-    const sortItem = new SortItem(sortItemInfo);
-    render(this._sortContainer.getElement().querySelector(`span:last-child`), sortItem.getElement(), Position.BEFORE);
+  init() {
+    this._filterController.init();
+    this._sortController.init();
+    this._renderMainContent();
   }
 
-  _renderSort() {
-    this._sortItems.forEach((sortItemInfo) => this._renderSortItem(sortItemInfo));
-    this._sortContainer.getElement().addEventListener(`click`, this._onSortItemClick);
-    render(this._container.querySelector(`h2`), this._sortContainer.getElement(), Position.AFTER);
+  hide() {
+    this._container.classList.add(`visually-hidden`);
   }
 
-  _onSortItemClick(evt) {
-    if (evt.target.tagName === `INPUT`) {
-      unrender(this._daysList.getElement());
-      this._daysList.removeElement();
-      this._subscriptions.forEach((item) => item.destroyFlatpickr());
-      this._currentSortType = evt.target.getAttribute(`data-sort-type`);
-      this._reRenderDaysList();
+  show() {
+    this._container.classList.remove(`visually-hidden`);
+  }
+
+  createNewEvent() {
+    if (this._creatingEvent) {
+      return;
     }
+
+    this._onChangeView();
+    const newEventIndex = this._events.length + 1;
+
+    const emptyEvent = {
+      basePrice: null,
+      dateFrom: null,
+      dateTo: null,
+      destination: null,
+      isFavorite: null,
+      offers: null,
+      type: `flight`,
+    };
+
+    this._creatingEvent = new EventController(this._daysList, emptyEvent, newEventIndex, this._onDataChange, this._onChangeView, EventControllerMode.ADDING);
+    this._subscriptions.push({
+      setDefaultView: eventController.setDefaultView.bind(eventController),
+      destroyFlatpickr: eventController.destroyFlatpickr.bind(eventController),
+    });
   }
 
-  _sortEvents() {
-    switch (this._currentSortType) {
-      case `event`:
-        this._eventsForRender = new Array(...this._events);
-        this._sortContainer.getElement().querySelector(`.trip-sort__item--day`).textContent = `day`;
-        break;
-      case `time`:
-        this._eventsForRender = this._events.slice().sort((a, b) => new Date(a.dateFrom).getTime() - new Date(b.dateFrom).getTime());
-        this._sortContainer.getElement().querySelector(`.trip-sort__item--day`).textContent = ``;
-        break;
-      case `price`:
-        this._eventsForRender = this._events.slice().sort((a, b) => a.basePrice - b.basePrice);
-        this._sortContainer.getElement().querySelector(`.trip-sort__item--day`).textContent = ``;
-        break;
-    }
+  _onSortEvants(sortType) {
+    unrender(this._daysList.getElement());
+    this._daysList.removeElement();
+    this._subscriptions.forEach((item) => item.destroyFlatpickr());
+    this._currentSortType = sortType;
+    this._reRenderDaysList();
   }
 
   _renderEvent(eventsList, eventInfo, index) {
@@ -164,46 +171,9 @@ export default class TripController {
     if (this._events.length === 0) {
       render(this._container, this._noEvents.getElement(), Position.BEFOREEND);
     } else {
-      this._renderSort();
+      // this._renderSort();
       this._renderDaysList();
       this._updateTotalSum();
     }
-  }
-
-  hide() {
-    this._container.classList.add(`visually-hidden`);
-  }
-
-  show() {
-    this._container.classList.remove(`visually-hidden`);
-  }
-
-  createNewEvent() {
-    if (this._creatingEvent) {
-      return;
-    }
-
-    this._onChangeView();
-    const newEventIndex = this._events.length + 1;
-
-    const emptyEvent = {
-      basePrice: null,
-      dateFrom: null,
-      dateTo: null,
-      destination: null,
-      isFavorite: null,
-      offers: null,
-      type: `flight`,
-    };
-
-    this._creatingEvent = new EventController(this._daysList, emptyEvent, newEventIndex, this._onDataChange, this._onChangeView, EventControllerMode.ADDING);
-    this._subscriptions.push({
-      setDefaultView: eventController.setDefaultView.bind(eventController),
-      destroyFlatpickr: eventController.destroyFlatpickr.bind(eventController),
-    });
-  }
-
-  init() {
-    this._renderMainContent();
   }
 }
